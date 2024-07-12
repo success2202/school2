@@ -35,6 +35,13 @@
         <li class="nav-item">
           <a class="nav-link" href="<?=ROOT?>/test">TESTS</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="<?=ROOT?>/signup">SIGNUP</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?=ROOT?>/login">LOGIN</a>
+        </li>
         </ul>
         <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">

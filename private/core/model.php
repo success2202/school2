@@ -3,7 +3,8 @@
 class Model extends Database
 {
     //protected $table = "users";
-    function __construct(){
+    public $errors = array();
+   public function __construct(){
         if(!property_exists($this, 'table')){
             $this->table = strtolower($this::class) . "s";
         }
