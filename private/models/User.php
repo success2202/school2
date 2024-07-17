@@ -3,7 +3,8 @@
 
 class User extends Model
 {
-    protected $allowedColumns = [
+    //protected $table = "users";
+    protected $allowedColumns=[
         'firstname',
         'lastname',
         'email',
@@ -15,22 +16,30 @@ class User extends Model
     protected $beforeInsert = [
         'make_user_id',
         'make_school_id',
-        'hash_password'];
+        'hash_password',];
 
    public function validate($DATA){
     $this->errors = array();
     //check for firstname
     if(empty($DATA['fname']) || !preg_match('/^[a-zA-Z]+$/', $DATA['fname'])){
-        $this->errors['fname'] = "the first name must be letters";
+        $this->errors['fname'] = "the  name must be letters";
     }
+        
     //check for last name
     if(empty($DATA['lname']) || !preg_match('/^[a-zA-Z]+$/', $DATA['lname'])){
-        $this->errors['lname'] = "the last name must be letters";
+        $this->errors['lname'] = "the lastname must be letters";
     }
     //check for email
     if(empty($DATA['email']) || !filter_var($DATA['email'],FILTER_VALIDATE_EMAIL)){
         $this->errors['email'] = "invalid email";
     }
+
+    //check if email exist
+    if($this->where('email', $DATA['email']))
+    {
+        $this->errors['email'] = "the email is already taken";
+    }        
+    
      //check for gender
      $genders = ['male', 'female'];
      if(empty($DATA['gender']) || !in_array($DATA['gender'], $genders)){
@@ -56,7 +65,7 @@ class User extends Model
    }
 
    public function make_user_id($data){
-    $data['user_id'] = $this->random_string(60);
+    $data['user_id'] = random_string(60);
         return $data;
    }
 
@@ -72,12 +81,4 @@ class User extends Model
         return $data;
    }
 
-   public function random_string($length){
-    $array = array(0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-    $text = "";
-    for($x = 0; $x < $length; $x++){
-        $random = rand(0,61);
-        $text .= $array[$random];
-    }
-   }
 }

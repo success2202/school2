@@ -1,7 +1,7 @@
 <?php
-//home controller
+//users controller
 
-class Home extends controller
+class Users extends controller
 {
     function index()
     {
@@ -12,7 +12,7 @@ class Home extends controller
         $user = new User();
        
         $data = $user->findAll();
-          $this->view('home',['rows'=>$data]);
+          $this->view('users',['rows'=>$data]);
     }
     
 }

@@ -8,6 +8,7 @@
     nav ul li a:hover{
         background-color: grey;
         color: white !important;
+       
     }
 
 
@@ -23,36 +24,40 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link" href="<?=ROOT?>">DASHBOARD</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?=ROOT?>/users">USERS</a>
-        </li>  
-        <li class="nav-item">
-          <a class="nav-link" href="<?=ROOT?>/classes">CLASSES</a>
-        </li>  
-        
-        <li class="nav-item">
-          <a class="nav-link" href="<?=ROOT?>/test">TESTS</a>
+          <a class="nav-link" href="<?=ROOT?>/dashboard">DASHBOARD</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="<?=ROOT?>/signup">SIGNUP</a>
+          <a class="nav-link" href="<?=ROOT?>/schools">SCHOOLS</a>
+        </li> 
+        <li class="nav-item">
+          <a class="nav-link" href="<?=ROOT?>/users">STAFF</a>
+        </li>  
+        <li class="nav-item">
+          <a class="nav-link" href="<?=ROOT?>/students">STUDENTS</a>
+        </li>  
+        
+        <li class="nav-item">
+          <a class="nav-link" href="<?=ROOT?>/classes">CLASSES</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?=ROOT?>/login">LOGIN</a>
+          <a class="nav-link" href="<?=ROOT?>/test">TEST</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?=ROOT?>/signup">SIGNUP</a>
+        </li>
+        
         </ul>
         <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
-            USER
+            <?= Auth::getfirstname()?>
           </a>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="<?=ROOT?>/profile">Profile</a></li>
             <li><a class="dropdown-item" href="<?=ROOT?>">Dashboard</a></li>
             <li><hr class="dropdown-divider"></li> 
-            <li><a class="dropdown-item" href="<?=ROOT?>">Logout</a></li>
+            <li><a class="dropdown-item" href="<?=ROOT?>/logout">Logout</a></li>
           </ul>
         </li>
       </ul>
