@@ -5,11 +5,11 @@
 <?php $this->view('includes/crumbs',['crumbs'=>$crumbs])?>
 
 <div class="card-group justify-content-center">
-<h5>Schools</h5>
+<h5>Classes</h5>
 <table class="table table-striped table-hover">
-    <tr><th>Details</th><th>School</th> <th>Created by</th><th>Date</th>
+    <tr><th>Details</th><th>Class Name</th> <th>Created by</th><th>Date</th>
     <th>
-        <a href="<?=ROOT?>/schools/add">
+        <a href="<?=ROOT?>/classes/add">
         <button class="btn-sm btn btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New</i></button>
         </a>
     </th>
@@ -23,16 +23,12 @@
             <td><button class="btn btn-sm btn-primary"><i class="fa fa-chevron-right"></i></button></td>
             <td><?=$row->school?></td><td><?=$row->user->firstname?>  <?=$row->user->lastname?></td><td><?=get_date($row->date)?></td>
             <td>
-            <a href="<?=ROOT?>/schools/edit/<?=$row->user->id?>">
+            <a href="<?=ROOT?>/classes/edit/<?=$row->user->id?>">
                 <button class="btn-sm btn btn-info text-white"><i class="fa fa-edit"></i></button>
             </a>
             &nbsp;&nbsp;
-            <a href="<?=ROOT?>/schools/delete/<?=$row->user->id?>">
+            <a href="<?=ROOT?>/classes/delete/<?=$row->user->id?>">
                 <button class="btn-sm btn btn-danger"><i class="fa fa-trash-alt"></i></button>
-            </a>
-            &nbsp;&nbsp;
-            <a href="<?=ROOT?>/switch_school/<?=$row->user->id?>">
-                <button class="btn-sm btn btn-success">Switch to school &nbsp;&nbsp;<i class="fa fa-chevron-right"></i></button>
             </a>
 
             </td>
