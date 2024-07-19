@@ -4,10 +4,12 @@
 <div class="container-fluid p-4 shadow mx-auto" style="max-width: 1000px;">
 <?php $this->view('includes/crumbs',['crumbs'=>$crumbs])?>
 
+<?php if($row):?>
 <div class="card-group justify-content-center">
+ 
 
 <form method="post">
-    <h3>Add New School</h3>
+    <h3>Edit School</h3>
 
     <?php if(count($errors)>0):?>
    <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -21,14 +23,23 @@
 </div>
 <?php endif;?>
 
-    <input autofocus class="form-control" type="text" value="<?= get_var('school');?>" name="school" placeholder="School Name"> <br>
-    <input class="btn btn-primary float-right" type="submit" value="Create">
+    <input autofocus class="form-control" type="text" value="<?=get_var('school', $row[0]->school)?>" name="school" placeholder="School Name"> <br>
+    <input class="btn btn-primary float-right" type="submit" value="Save">
     <a href="<?=ROOT?>/schools">
         <input class="btn btn-danger text-white" type="button" value="Cancel">
     </a>
 </form>
-
+  </div>
+<?php else: ?>
+    <div style="text-align: center;">
+   <h3>that School  was not Found</h3>
+   
+   <a href="<?=ROOT?>/schools">
+        <input class="btn btn-danger text-white" type="button" value="Cancel">
+    </a>
 </div>
+<?php endif; ?>
+
 
     </div> 
     

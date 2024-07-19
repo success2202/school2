@@ -17,7 +17,7 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
     <img src="<?=ROOT?>/assets/logo1.png" class="" style="width: 70px" alt="">
-        My School</a>
+    <?= Auth::getschool_name()?></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -64,3 +64,4 @@
     </div>
   </div>
 </nav>
+

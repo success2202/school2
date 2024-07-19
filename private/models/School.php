@@ -30,7 +30,7 @@ class School extends Model
      }
    
    public function make_user_id($data){
-    if(isset($_SESSION['USER']->school_id)){
+    if(isset($_SESSION['USER']->user_id)){
        $data['user_id'] = $_SESSION['USER']->user_id;  
    }
     return $data;

@@ -14,8 +14,8 @@
             </div>
             </form>
           
-        <a href="<?=ROOT?>/signup">
-          <button class="btn btn-sm btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New User</i></button>
+        <a href="<?=ROOT?>/signup?mode=students">
+          <button class="btn btn-sm btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New Student</i></button>
         </a>
       </nav>
 
@@ -37,7 +37,7 @@
 </div>
   <?php endforeach; ?>
 <?php else: ?>
-<h4>No User found at the moment</h4>
+<h4>No student found </h4>
 <?php endif; ?>
 </div>
     </div>

@@ -2,18 +2,28 @@
 <?php $this->view('includes/nav')?>
 
     <div class="container-fluid p-4 shadow mx-auto" style="max-width: 1000px;">
-    <?php $this->view('includes/crumbs')?>
+    <?php $this->view('includes/crumbs',['crumbs'=>$crumbs])?>
+
+    <?php if($row): ?>
+
+    <?php  
+      $image = get_image($row->image, $row->gender); 
+    ?>
+
     <div class="row">
         <div class="col-sm-4 col-md-3">
-        <img src="<?=ROOT?>/assets/user.png" class=" bg-light d-block border border-light mx-auto rounded-circle" style="width: 150px" alt="">
-        <h3 class="text-center">Mary Mike</h3>
+        <img src="<?=$image?>" class=" bg-light d-block border border-light mx-auto rounded-circle" style="width: 150px" alt="">
+        <h3 class="text-center"><?=esc($row->firstname)?> <?=esc($row->lastname)?></h3>
     </div>
         <div class="col-sm-9 col-md-8 bg-light p-2">
             <table class="table table-hover table-striped table-bordered">
-                <tr><th>First Name:</th><td>Mary</td></tr>
-                <tr><th>Last Name:</th><td>Mike</td></tr>
-                <tr><th>Gender:</th><td>Male</td></tr>
-                <tr><th>Date Created:</th><td>30-06-2024</td></tr>
+                <tr><th>First Name:</th><td><?=esc($row->firstname)?></td></tr>
+                <tr><th>Last Name:</th><td><?=esc($row->lastname)?></td></tr>
+                <tr><th>Email:</th><td><?=esc($row->email)?></td></tr>
+                <tr><th>Gender:</th><td><?=esc($row->gender)?></td></tr>
+                <tr><th>Rank:</th><td><?=esc($row->rank)?></td></tr>
+                <!-- <tr><th>Rank:</th><td><?//=ucwords(str_replace("_"," ",$row->rank))?></td></tr> -->
+                <tr><th>Date Created:</th><td><?=get_date($row->date)?></td></tr>
             </table>
         </div>
     </div>
@@ -31,7 +41,7 @@
             </li>
             
         </ul>
-                <nav class="navbar navbar-light bg-light">
+        <nav class="navbar navbar-light bg-light">
             <form class="container-inline">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -42,5 +52,9 @@
             </form>
             </nav>
     </div>
+
+    <?php else: ?>
+        <h4 style="text-align:center;"> User Profile not found</h4>
+    <?php endif; ?>
     </div>
     <?php $this->view('includes/footer')?>
