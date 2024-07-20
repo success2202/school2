@@ -4,8 +4,9 @@
 <div class="container-fluid p-4 shadow mx-auto" style="max-width: 1000px;">
 <?php $this->view('includes/crumbs',['crumbs'=>$crumbs])?>
 
+        <h5 class="card-group justify-content-center">Schools</h5>
 <div class="card-group justify-content-center">
-<h5>Schools</h5>
+        
 <table class="table table-striped table-hover">
     <tr><th>Details</th><th>School</th> <th>Created by</th><th>Date</th>
     <th>
@@ -14,9 +15,7 @@
         </a>
     </th>
 </tr>
-
-
-    <?php if($rows):?>
+<?php if($rows):?>
         <?php foreach($rows as $row):?>
 
             <tr>
@@ -38,10 +37,15 @@
             </td>
             </tr>
         <?php endforeach; ?>
-    <?php else:?>
-        <h4>No Schools were found at the moment</h4>
+
+        <?php else:?>
+        <h4>No Schools found</h4>
     <?php endif; ?>
+    
 </table>
+
+
+
 </div>
     </div>
     

@@ -9,7 +9,8 @@ class Classes extends controller
         {
             $this->redirect('login');
         }
-        $classes = new classes();
+        $classes = new classes_model();
+       
        
         $data = $classes->findAll();
 
@@ -31,11 +32,8 @@ class Classes extends controller
         $errors = array();
         if(count($_POST) > 0)
         {
-        $clases = new classes();
+        $classes = new classes_model();
         if($classes->validate($_POST)){
-
-            $arr['class'] = $_POST['class'];
-            $arr['date'] = date("Y-m-d H:i:s");
     
             $classes->insert($_POST);
             $this->redirect('classes');
@@ -63,7 +61,7 @@ class Classes extends controller
             $this->redirect('login');
         }
 
-        $classes = new classes();
+        $classes = new classes_model();
         $errors = array();
         if(count($_POST) > 0)
         {
@@ -103,7 +101,7 @@ class Classes extends controller
             $this->redirect('login');
         }
 
-        $classes = new classes();
+        $classes = new classes_model();
 
         $errors = array();
         if(count($_POST) > 0)

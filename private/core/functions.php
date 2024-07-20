@@ -33,6 +33,16 @@ function esc($var){
     return $text;
    }
 
+   function random_st($length){
+    $array = array(0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f','g','h','i','j');
+    $text = "";
+    for($x = 0; $x < $length; $x++){
+        $random = rand(0,20);
+        $text .= $array[$random];
+    }
+    return $text;
+   }
+
 function get_date($date)
 {
     return date("jS M, Y", strtotime($date));
@@ -56,4 +66,14 @@ function get_image($image, $gender='male'){
         }
       }
       return $image;
+}
+
+
+//returning the view path
+function views_path($view){
+    if(file_exists("../private/views/" . $view . ".inc.php")){
+       return("../private/views/" . $view . ".inc.php");
+    }else{
+        return("../private/views/404.view.php");
+    }
 }

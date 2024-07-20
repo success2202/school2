@@ -1,7 +1,7 @@
 <?php
 //schools model
 
-class Classes extends Model
+class Classes_model extends Model
 {
     protected $table = "Classes";
     protected $allowedColumns = [
@@ -22,9 +22,9 @@ class Classes extends Model
    public function validate($DATA){
     $this->errors = array();
     //check for school
-    if(empty($DATA['class']) || !preg_match('/^[a-zA-Z]+$/', $DATA['class']))
+    if(empty($DATA['class']) || !preg_match('/^[a-z A-Z0-9]+$/', $DATA['class']))
     {
-       $this->errors['class'] = "only letters are allowed and no spaces in class name";
+       $this->errors['class'] = "only letters & allowed in class name";
        return false;
     }
         return true;
