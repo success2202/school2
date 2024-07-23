@@ -1,5 +1,5 @@
 <form method="post" class="form mx-auto" style="width:100%;max-width: 400px;">
-  <br><center> <h4>Add Lecturer</h4> </center>
+  <br><center> <h4>Remove Lecturer</h4> </center>
 
   <?php if(count($errors)>0):?>
    <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -14,7 +14,7 @@
 <?php endif;?>
 
 
-    <input value="<?=get_var('name')?>" autofocus class="form-control" type="text" name="name" placeholder= "lectuerer name">
+    <input value="<?=get_var('name')?>" autofocus class="form-control" type="text" name="name" placeholder= "enter lectuerer name">
     <br>
     <a href="<?=ROOT?>/single_class/<?=$row->class_id?>?tab=lecturers">
         <button type="button" class="btn btn-danger">Cancel</button>
@@ -39,7 +39,7 @@
   <?php else: ?>
     
     <?php if(count($_POST) > 0):?>
-    <center><hr><h4>No results were found</h4></center>
+    <center><hr><h4>No lecturer was found</h4></center>
     <?php endif; ?>
 <?php endif; ?>
 </form>

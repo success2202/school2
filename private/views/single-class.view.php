@@ -10,13 +10,12 @@
         <center> <h5><?=esc(ucwords($row->class))?></h5> </center>
 
             <table class="table table-hover table-striped table-bordered">
-                <tr><th>Class Name:</th><td><?=esc($row->class)?></td></tr>
-                <tr><th>Created by:</th><td><?=esc($row->user->firstname)?> <?=esc($row->user->lastname)?></td></tr>
-                <tr><th>Date Created:</th><td><?=get_date($row->date)?></td></tr>
+            
+                <tr><th>Created by:</th><td><?=esc($row->user->firstname)?> <?=esc($row->user->lastname)?></td>
+                <th>Date Created:</th><td><?=get_date($row->date)?></td></tr>
             </table>
        
     </div>
-    <br>
     
         <ul class="nav nav-tabs">
             <li class="nav-item">
@@ -45,6 +44,14 @@
             case 'lecturers-add':
                 include(views_path('class-tab-lecturers-add'));
                 break;
+            case 'lecturers-remove':
+                include(views_path('class-tab-lecturers-remove'));
+                break;
+
+            case 'students-remove':
+                include(views_path('class-tab-students-remove'));
+                break;
+
             case 'students-add':
                 include(views_path('class-tab-students-add'));
                  break;
