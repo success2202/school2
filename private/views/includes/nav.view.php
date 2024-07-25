@@ -15,7 +15,7 @@
 </style>
 <nav class="navbar navbar-expand-lg navbar-light bg-light p-2">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="<?=ROOT?>">
     <img src="<?=ROOT?>/assets/logo1.png" class="" style="width: 70px" alt="">
     <?= Auth::getschool_name()?></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +24,7 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link" href="<?=ROOT?>/dashboard">DASHBOARD</a>
+          <a class="nav-link" href="<?=ROOT?>">DASHBOARD</a>
         </li>
 
         <li class="nav-item">
@@ -41,7 +41,7 @@
           <a class="nav-link" href="<?=ROOT?>/classes">CLASSES</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?=ROOT?>/test">TEST</a>
+          <a class="nav-link" href="<?=ROOT?>/tests">TEST</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="<?=ROOT?>/signup">SIGNUP</a>

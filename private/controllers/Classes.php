@@ -62,15 +62,14 @@ class Classes extends controller
         }
 
         $classes = new classes_model();
-        $errors = array();
-        if(count($_POST) > 0)
+        $errors = array(); //edit class if you add the class and if you are authorised to 
+        if(count($_POST) > 0 && Auth::access('lecturer') && Auth::i_own_content($row))
         {
         
         if($classes->validate($_POST)){
 
             //$arr['school'] = $_POST['school'];
             
-    
             $classes->update($id,$_POST);
             $this->redirect('classes');
         }else{
@@ -85,12 +84,17 @@ class Classes extends controller
              $crumbs[] = ['Dashboard', ''];
              $crumbs[] = ['classes', 'classes'];
              $crumbs[] = ['edit', 'classes/edit'];
-          $this->view('classes.edit',[
-            'row'=>$row,
-            'errors'=>$errors,
-            'crumbs'=>$crumbs,
-            ]);
-    }
+        //deny access if you are not alloe to edit
+        if(Auth::access('lecturer') && Auth::i_own_content($row)){ 
+            $this->view('classes.edit',[
+                'row'=>$row,
+                'errors'=>$errors,
+                'crumbs'=>$crumbs,
+                ]);
+            }else{
+                $this->view('access-denied');
+            }
+        }
 
 
 //delete school
@@ -101,26 +105,31 @@ class Classes extends controller
             $this->redirect('login');
         }
 
-        $classes = new classes_model();
+            $classes = new classes_model();
 
-        $errors = array();
-        if(count($_POST) > 0)
-        {
-            $classes->delete($id);
-            $this->redirect('classes');
+            $errors = array();
+        //delete class if you add the class and if you are authorised to 
+         if(count($_POST) > 0 && Auth::access('lecturer') && Auth::i_own_content($row))
+            {
+                $classes->delete($id);
+                $this->redirect('classes');
 
+            }
+
+            $row = $classes->where('id',$id);
+
+                $crumbs[] = ['Dashboard', ''];
+                $crumbs[] = ['classes', 'classes'];
+                $crumbs[] = ['delete', 'classes/delete'];
+                //deny access if you are not allowed to delete
+        if(Auth::access('lecturer') && Auth::i_own_content($row)){ 
+            $this->view('classes.delete',[
+                'row'=>$row,
+                'crumbs'=>$crumbs,
+                ]);
+        }else{
+            $this->view('access-denied');
         }
-
-        $row = $classes->where('id',$id);
-
-            $crumbs[] = ['Dashboard', ''];
-            $crumbs[] = ['classes', 'classes'];
-            $crumbs[] = ['delete', 'classes/delete'];
-
-          $this->view('classes.delete',[
-            'row'=>$row,
-            'crumbs'=>$crumbs,
-            ]);
     }
 }
 
