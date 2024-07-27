@@ -3,7 +3,7 @@
 
 class Classes_model extends Model
 {
-    protected $table = "Classes";
+    protected $table = "classes";
     protected $allowedColumns = [
         'class',
         'date',
@@ -39,10 +39,21 @@ class Classes_model extends Model
 
 public function make_school_id($data){
     if(isset($_SESSION['USER']->school_id)){
-       $data['school_id'] = $_SESSION['USER']->user_id;  
+       $data['school_id'] = $_SESSION['USER']->school_id;  
    }
     return $data;
 }
+
+
+
+// public function make_school_id($data){
+    
+//     $data['school_id'] = random_string(60);
+//     return $data;
+
+// }
+
+
    public function make_class_id($data){
     
         $data['class_id'] = random_string(60);

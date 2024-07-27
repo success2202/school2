@@ -33,25 +33,33 @@
             <li class="nav-item">
                 <a class="nav-link <?=$page_tab=='info' ? 'active':'';?>"  href="<?=ROOT?>/profile/<?=$row->user_id?>?tab=info">Basic Info</a>
             </li>
+
+            <?php if(Auth::access('lecturer') || Auth::i_own_content($row)): ?>
             <li class="nav-item">
                 <a class="nav-link <?=$page_tab=='classes' ? 'active':'';?>" href="<?=ROOT?>/profile/<?=$row->user_id?>?tab=classes">Classes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?=$page_tab=='tests' ? 'active':'';?>" href="<?=ROOT?>/profile/<?=$row->user_id?>?tab=tests">Tests</a>
             </li>
-            
+            <?php endif;?>
         </ul>
 <?php 
 switch ($page_tab) {
     case 'info':
         include(views_path('profile-tab-info')); 
         break;
-        case 'classes':
-            include(views_path('profile-tab-classes'));   
-            break;
-            case 'tests':
-                include(views_path('profile-tab-tests')); 
-                break;
+
+    case 'classes':
+    if(Auth::access('lecturer') || Auth::i_own_content($row)){ 
+        include(views_path('profile-tab-classes')); 
+    }else{
+        include(views_path('access-denied')); 
+    }  
+        break;
+
+    case 'tests':
+        include(views_path('profile-tab-tests')); 
+        break;
     
     default:
         # code...

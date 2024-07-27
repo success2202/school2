@@ -1,11 +1,9 @@
 
 <div class="card-group justify-content-center">
 <table class="table table-striped table-hover">
-    <tr><th>Details</th><th>Class Name</th> <th>Created by</th><th>Date</th>
+    <tr><th>Details</th><th>Class Name</th> <th>Created by</th><th>Date</th> <th>ACTION</th>
     <th>
-        <a href="<?=ROOT?>/classes/add">
-        <button class="btn-sm btn btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New</i></button>
-        </a>
+   
     </th>
 </tr>
 

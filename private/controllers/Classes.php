@@ -10,10 +10,40 @@ class Classes extends controller
             $this->redirect('login');
         }
         $classes = new classes_model();
-       
-       
-        $data = $classes->findAll();
+        $school_id = Auth::getSchool_id();
 
+        if(Auth::access('admin')){ 
+            //$data = $classes->findAll();
+             $query = "select * from classes where school_id = :school_id order by id desc";
+             $arr['school_id'] = $school_id;
+
+             if(isset($_GET['find']))
+        {
+            $find = '%' . $_GET['find'] . '%';
+            $query = "select * from classes where school_id = :school_id && (class like :find ) order by id desc";
+            $arr['find'] = $find; 
+        }
+            $data = $classes->query($query,$arr);
+
+             
+         }else{
+            $class = new Classes_model();
+          $mytable = "class_students";
+          if(Auth::getRank() == 'lecturer'){
+            $mytable = "class_lecturers";
+          }
+
+          $query = "select * from $mytable where user_id = :user_id && disabled = 0";
+          $arr['stdnt_classes'] = $class->query($query,['user_id'=>Auth::getUser_id()]);
+         
+          //getting the class 
+          $data = array();
+          if($arr['stdnt_classes']){
+              foreach ($arr['stdnt_classes'] as $key => $arow) {
+                $data[] = $class->first('class_id', $arow->class_id);
+              }
+          }
+         }
         $crumbs[] = ['Dashboard', ''];
         $crumbs[] = ['classes', 'classes'];
           $this->view('classes',[

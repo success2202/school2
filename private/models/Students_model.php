@@ -12,9 +12,9 @@ class Students_model extends Model
         'date',
         ];
 
-    // protected $beforeInsert = [
-    //     'make_school_id',
-    //     ];
+    protected $beforeInsert = [
+        'make_school_id',
+        ];
 
     protected $afterSelect = [
          'get_user',
@@ -26,6 +26,14 @@ public function make_school_id($data){
    }
     return $data;
 }
+
+
+// public function make_school_id($data){
+    
+//     $data['school_id'] = random_string(60);
+//     return $data;
+
+// }
 
 
    public function get_user($data){

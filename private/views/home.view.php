@@ -21,6 +21,7 @@
 <div class="container-fluid p-4 shadow mx-auto" style="max-width: 1000px;">
    <div class="row justify-content-center">
     
+  <?php if(Auth::access('superAdmin')):?>
         <div class="card col-3 shadow rounded m-4 p-0 border"> 
         <a href="<?=ROOT?>/schools">
             <div class="card-header">SCHOOLS </div>
@@ -30,7 +31,9 @@
             <div class="card-footer">view all schools</div>
             </a>
         </div>
-     
+  <?php endif;?>
+
+ <?php if(Auth::access('admin')):?>
         <div class="card col-3 shadow rounded m-4 p-0 border"> 
         <a href="<?=ROOT?>/users">
          <div class="card-header">STAFFS </div>
@@ -40,7 +43,9 @@
             <div class="card-footer">view all staff members</div>
          </a>
         </div>
-    
+  <?php endif;?>
+
+  <?php if(Auth::access('reception')):?>
         <div class="card col-3 shadow rounded m-4 p-0 border"> 
         <a href="<?=ROOT?>/students">
             <div class="card-header">STUDENTS </div>
@@ -50,7 +55,8 @@
             <div class="card-footer">view all studnts</div>
           </a>
         </div>
-   
+  <?php endif;?>
+
         <div class="card col-3 shadow rounded m-4 p-0 border"> 
         <a href="<?=ROOT?>/classes">
             <div class="card-header">CLASSES </div>
@@ -71,6 +77,7 @@
         </a>
         </div>
     
+     <?php if(Auth::access('admin')):?>
         <div class="card col-3 shadow rounded m-4 p-0 border"> 
         <a href="<?=ROOT?>/statistics">
             <div class="card-header">STATISTICS </div>
@@ -80,7 +87,8 @@
             <div class="card-footer">view student statistics</div>
           </a>
         </div>
-   
+    <?php endif;?>
+
         <div class="card col-3 shadow rounded m-4 p-0 border"> 
         <a href="<?=ROOT?>/profile">
             <div class="card-header">PROFILE </div>
@@ -91,6 +99,7 @@
          </a>
         </div>
     
+    <?php if(Auth::access('admin')):?>
         <div class="card col-3 shadow rounded m-4 p-0 border"> 
         <a href="<?=ROOT?>/settings">
             <div class="card-header">SETTINGS </div>
@@ -100,7 +109,8 @@
             <div class="card-footer">view app settings</div>
         </a>
         </div>
-        
+    <?php endif;?>
+
         <div class="card col-3 shadow rounded m-4 p-0 border"> 
         <a href="<?=ROOT?>/logout">
             <div class="card-header">LOGOUT </div>
