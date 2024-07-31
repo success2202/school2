@@ -31,11 +31,11 @@
 <?php else: ?>
 <h4>No student found </h4>
 <?php endif; ?>
+
 </div>
+<?php $pager->display(); ?>
+
     </div>
     
-   
-
-
-
+  
     <?php $this->view('includes/footer')?>

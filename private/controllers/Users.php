@@ -13,13 +13,13 @@ class Users extends controller
        
         $school_id = Auth::getschool_id();
         
-        $query = "select * from users where school_id = :school_id && rank not in ('student') order by id desc";
+        $query = "select * from users where school_id = :school_id && rank not in ('student') order by id desc limit $limit offset $offset";
         $arr['school_id'] = $school_id;
 
         if(isset($_GET['find']))
         {
             $find = '%' . $_GET['find'] . '%';
-            $query = "select * from users where school_id = :school_id && rank not in ('student') && (firstname like :find || lastname like :find) order by id desc";
+            $query = "select * from users where school_id = :school_id && rank not in ('student') && (firstname like :find || lastname like :find) order by id desc limit $limit offset $offset";
             $arr['find'] = $find; 
         }
         $data = $user->query($query,$arr);

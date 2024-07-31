@@ -34,7 +34,17 @@ class Classes extends controller
           }
 
           $query = "select * from $mytable where user_id = :user_id && disabled = 0";
-          $arr['stdnt_classes'] = $class->query($query,['user_id'=>Auth::getUser_id()]);
+          
+          $arr['user_id'] = Auth::getUser_id();
+
+    if(isset($_GET['find']))
+        {
+         $find = '%' . $_GET['find'] . '%';
+         $query = "select classes.class, {$mytable}.* from $mytable join classes on classes.class_id ={$mytable}.class_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && classes.class like :find";
+         $arr['find'] = $find; 
+        }
+
+          $arr['stdnt_classes'] = $class->query($query,$arr);
          
           //getting the class 
           $data = array();
