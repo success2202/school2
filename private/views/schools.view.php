@@ -11,7 +11,7 @@
     <tr><th>Details</th><th>School</th> <th>Created by</th><th>Date</th>
     <th>
         <a href="<?=ROOT?>/schools/add">
-        <button class="btn-sm btn btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New</i></button>
+        <button class="btn-sm btn btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New School</i></button>
         </a>
     </th>
 </tr>

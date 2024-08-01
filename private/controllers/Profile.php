@@ -58,7 +58,28 @@ class Profile extends controller
         }
           
     }
-    
+
+
+    function edit($id = '')
+    {
+      if(!Auth::logged_in())
+      {
+          $this->redirect('login');
+      }
+
+        $user = new User(); //getting user id on the prrofile
+      $id = trim($id == '') ? Auth::getUser_id() : $id;
+        $row = $user->first('user_id', $id);
+
+        
+        if(Auth::access('reception') || Auth::i_own_content($row)){
+          $this->view('profile',$data);
+        }else{
+          $this->view('access-denied');
+        }
+        
+       
+      }
 }
 
 

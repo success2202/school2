@@ -14,7 +14,7 @@
                 </div>
             </form>    
            <a href="<?=ROOT?>/signup">
-          <button class="btn btn-sm btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New User</i></button>
+          <button class="btn btn-sm btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New Staff</i></button>
         </a>
     </nav>
 
@@ -29,6 +29,8 @@
 <h4>No User found at the moment</h4>
 <?php endif; ?>
 </div>
+
+<?php $pager->display() ?>
     </div>
     
    

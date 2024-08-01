@@ -25,7 +25,13 @@
                 include(views_path('user'));
         ?>
       <?php endforeach;?>
+
+
       <?php else:?>  
         <center><h4>No student were found in this class</h4></center>
-      <?php endif;?>   
+      <?php endif;?> 
+
+
+
 </div>
+<?php $pager->display(); ?>

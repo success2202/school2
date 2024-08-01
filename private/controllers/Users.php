@@ -10,8 +10,10 @@ class Users extends controller
             $this->redirect('login');
         }
         $user = new User();
-       
-        $school_id = Auth::getschool_id();
+       $limit = 3;
+       $pager = new Pager($limit);
+       $offset = $pager->offset;
+       $school_id = Auth::getschool_id();
         
         $query = "select * from users where school_id = :school_id && rank not in ('student') order by id desc limit $limit offset $offset";
         $arr['school_id'] = $school_id;
@@ -30,7 +32,8 @@ class Users extends controller
     if(Auth::access('admin')){ 
             $this->view('users',[
                 'rows'=>$data,
-                'crumbs'=>$crumbs
+                'crumbs'=>$crumbs,
+                'pager'=>$pager
         ]);
      }else{
         $this->view('access-denied');

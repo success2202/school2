@@ -44,7 +44,7 @@ class Pager{
     <div>
      <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link"href="<?=$this->links['first']?>">first</a></li>
+                <li class="page-item"><a class="page-link"href="<?=$this->links['first']?>">Prev</a></li>
                
              <?php for($x = $this->start; $x <= $this->end;$x++):?>
                 <li class="page-item

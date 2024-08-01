@@ -14,6 +14,17 @@
         <div class="col-sm-4 col-md-3">
         <img src="<?=$image?>" class=" bg-light d-block border border-light mx-auto rounded-circle" style="width: 150px" alt="">
         <h3 class="text-center"><?=esc($row->firstname)?> <?=esc($row->lastname)?></h3>
+        <br>
+        <?php if(Auth::access('lecturer') || Auth::i_own_content($row)): ?>
+        <div class="text-center"> 
+            <a href="<?=ROOT?>/profile/edit<?=$row->user_id?>">
+                  <button class="btn-sm btn btn-info">Edit Profile</button>
+            </a>
+            <a href="<?=ROOT?>/profile/delete<?=$row->user_id?>">
+                  <button class="btn-sm btn btn-danger">Delete profile</button>
+            </a>
+        </div>
+        <?php endif;?>
     </div>
         <div class="col-sm-9 col-md-8 bg-light p-2">
             <table class="table table-hover table-striped table-bordered">

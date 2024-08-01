@@ -21,12 +21,12 @@ class User extends Model
    public function validate($DATA){
     $this->errors = array();
     //check for firstname
-    if(empty($DATA['fname']) || !preg_match('/^[a-zA-Z]+$/', $DATA['fname'])){
+    if(empty($DATA['fname']) || !preg_match('/^[a-z A-Z]+$/', $DATA['fname'])){
         $this->errors['fname'] = "the  name must be letters";
     }
         
     //check for last name
-    if(empty($DATA['lname']) || !preg_match('/^[a-zA-Z]+$/', $DATA['lname'])){
+    if(empty($DATA['lname']) || !preg_match('/^[a-z A-Z]+$/', $DATA['lname'])){
         $this->errors['lname'] = "the lastname must be letters";
     }
     //check for email
