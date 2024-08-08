@@ -35,7 +35,7 @@
         <?php endforeach; ?>
 
         <?php else:?>
-        <h4>No classes were found at the moment</h4>
+        <tr><td colspan="5"><center>No classes were found at the moment</center></td></tr>
     <?php endif; ?> <br>
 
     </table>

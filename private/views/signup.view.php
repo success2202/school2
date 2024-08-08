@@ -7,6 +7,7 @@
        <form method ="Post" action="">
    <div class="p-4 mx-auto shadow rounded" style="margin-top: 50px; width: 100%; max-width: 340px;">
    <h2 class="text-center">My School</h2>
+   <hr>
    <img src="<?=ROOT?>/assets/logo1.png" class=" border border-primary d-block mx-auto rounded-circle" style="width: 100px" alt="">
    
    <h3>Add User</h3>

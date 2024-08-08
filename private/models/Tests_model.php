@@ -1,18 +1,21 @@
 <?php
-//classes model
+//tests model
 
-class Classes_model extends Model
+class Tests_model extends Model
 {
-    protected $table = "classes";
+    protected $table = "tests";
     protected $allowedColumns = [
-        'class',
+        'test',
         'date',
+        'description',
+        'class_id',
+        'disabled',
         ];
 
     protected $beforeInsert = [
         'make_user_id',
         'make_school_id',
-        'make_class_id',
+        'make_test_id',
         ];
 
     protected $afterSelect = [
@@ -22,9 +25,9 @@ class Classes_model extends Model
    public function validate($DATA){
     $this->errors = array();
     //check for school
-    if(empty($DATA['class']) || !preg_match('/^[a-z A-Z0-9]+$/', $DATA['class']))
+    if(empty($DATA['test']) || !preg_match('/^[a-z A-Z0-9]+$/', $DATA['test']))
     {
-       $this->errors['class'] = "only letters & allowed in class name";
+       $this->errors['test'] = "only letters & allowed in test name";
        return false;
     }
         return true;
@@ -54,9 +57,9 @@ public function make_school_id($data){
 // }
 
 
-   public function make_class_id($data){
+   public function make_test_id($data){
     
-        $data['class_id'] = random_string(60);
+        $data['test_id'] = random_string(60);
         return $data;
    
    }
