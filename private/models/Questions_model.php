@@ -7,6 +7,7 @@ class Questions_model extends Model
     protected $allowedColumns = [
         'question',
         'date',
+        'comment',
         'test_id',
         'question_type',
         'correct_answer',
@@ -27,10 +28,21 @@ class Questions_model extends Model
     //check for question
     if(empty($DATA['question']))
     {
-       $this->errors['question'] = "add a valid question";
-       return false;
+       $this->errors['question'] = "please add a valid question";
     }
-        return true;
+    if(isset($DATA['correct_answer'])){
+        
+       if(empty($DATA['correct_answer']))
+        {
+        $this->errors['correct_answer'] = "please add a valid answer";
+        }
+    }
+
+     if(count($this->errors) == 0 )
+        {
+            return true;
+        }
+        return false;
      }
    
    public function make_user_id($data){

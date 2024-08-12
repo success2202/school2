@@ -38,8 +38,14 @@
                 include(views_path('test-tab-view'));
                 break;
     
-            case 'add-subjective':
-                include(views_path('test-tab-add-subjective'));
+            case 'add-question':
+                include(views_path('test-tab-add-question'));
+                break;
+            case 'edit-question':
+                include(views_path('test-tab-edit-question'));
+                break;
+            case 'delete-question':
+                include(views_path('test-tab-delete-question'));
                 break;
             case 'add-multiple':
                 include(views_path('test-tab-add-multiple'));
