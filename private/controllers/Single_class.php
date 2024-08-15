@@ -6,9 +6,9 @@ class Single_class extends controller
     public function index($id = '')
     {
       $errors = array();
-      if(!Auth::logged_in())
+      if(!Auth::access('student'))
       {
-          $this->redirect('login');
+          $this->redirect('access_denied');
       }
         $classes = new Classes_model();
         $row = $classes->first('class_id', $id);

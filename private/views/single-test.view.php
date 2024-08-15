@@ -25,7 +25,24 @@
             </tr>
            
            <?php $active = $row->disabled ? "No": "Yes";?>
-           <tr><td><b>Active:</b>  <br><hr><?=$active?></td><td colspan = "5"><b>Test Description</b><br><hr><?=esc($row->description)?></td></tr>
+           <tr>
+            <td>
+                <b>Active:</b>  <?=$active?> <br> <hr>
+            <?php
+                $btntext = 'Unpublished';
+                $btncolor = 'btn-primary';
+                if($row->disabled){
+                    $btntext = 'Published';
+                    $btncolor = 'btn-danger';
+                }
+
+            ?>
+            <a href="<?=ROOT?>/single_test/<?=$row->test_id?>?disabled=true">
+                <button class="btn btn-sm <?=$btncolor?>"><?=$btntext?></button>
+            </a>
+            </td>
+
+           <td colspan = "5"><b>Test Description</b><br><hr><?=esc($row->description)?></td></tr>
         
           
         </table>

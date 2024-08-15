@@ -55,6 +55,51 @@ if(isset($_GET['type']) && $_GET['type'] == 'objective'){
         </div>
     <?php endif;?>
 
+    <?php if(isset($_GET['type']) && $_GET['type'] == "multiple"): ?>
+        <div class="card" style="">
+        <div class="card-header bg-info text-white">
+            multiple Choice Answers <button onclick="add_choices()" type="button" class="btn btn-warning btn-sm float-right">Add Choice</button>
+        </div>
+        <ul class="list-group list-group-flush choice-list">
+
+    <?php if(isset($_POST['choice0'])):?>
+        <?php
+        //check for multiple choice answers
+        $num = 0;
+        $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+        
+    foreach($_POST as $key => $value){
+        if(strstr($key, 'choice')){
+            ?>
+            <li class="list-group-item">
+                <?=$letters[$num]?> : <input type="text" class="form-control" value="<?=$value?>" name="<?=$key?>" placeholder="type your answwe here"> 
+                <label style="cursor: pointer;"> <input type="radio" <?=$letters[$num] == $_POST['correct_answer'] ? 'checked' : '';?> value ="<?=$letters[$num]?>" name="correct_answer"> Correct Answer </label>
+            </li> 
+            <?php 
+            $num++;
+        }
+    }
+    ?>
+    <?php else:?>
+        <?php $choices = json_decode($question->choices); $num = 0;?>
+        <?php foreach($choices as $letter => $answer): ?>
+            <li class="list-group-item">
+               <?=$letter?> : <input type="text" class="form-control" name="choice<?=$num?>" placeholder="type your answwe here" value="<?=$answer?>"> 
+               <label style="cursor: pointer;"><input type="radio" <?=$letter == $question->correct_answer ? 'checked' : '';?> value="<?=$letter?>" name="correct_answer"> Correct Answer </label>
+            </li>
+            <?php $num++;?>
+            <!-- <li class="list-group-item">
+               B : <input type="text" class="form-control" name="choice1" placeholder="type your answwe here"> 
+           <label style="cursor: pointer;"><input type="radio" value="B" name="correct_answer"> Correct Answer </label>
+            </li> -->
+        <?php endforeach;?>
+    <?php endif;?>
+        
+        </ul>
+
+        </div><br>
+    <?php endif;?>
+
     <a href="<?=ROOT?>/single_test/<?=$row->test_id?>">
           <button class="btn btn-sm btn-primary" type="button"><i class="fa fa-chevron-left">&nbsp;Back</i></button>
     </a>

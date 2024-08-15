@@ -8,6 +8,8 @@
                 </div>
             </form>  
             <div> 
+
+<?php if(Auth::access('lecturer')):?>   
            <a href="<?=ROOT?>/single_class/studentsadd/<?=$row->class_id?>?select=true">
           <button class="btn btn-sm btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New $student</i></button>
         </a>
@@ -15,6 +17,8 @@
         <a href="<?=ROOT?>/single_class/studentsremove/<?=$row->class_id?>?select=true">
           <button class="btn btn-sm btn-primary"><i class="fa fa-minus">&nbsp;&nbsp;Remove student</i></button>
         </a>
+<?php endif;?>
+
         </div>  
     </nav> <br>
 <div class="card-group justify-content-center">

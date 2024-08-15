@@ -48,14 +48,45 @@
         <p class="card-text"><b>Answer</b> <?=esc($question->correct_answer)?></p>
       <?php endif;?>
 
-    <p class="card-text float-right">
-    <a href="<?=ROOT?>/single_test/editquestion/<?=$row->test_id?>/<?=$question->id?><?=$type?>">
-      <button class="btn btn-info text-white pe-1"><i class="fa fa-edit"></i></button>
-    </a>
+      <?php if($question->question_type == 'multiple'):
+      $type = '?type=multiple';
+      ?>
 
-    <a href="<?=ROOT?>/single_test/deletequestion/<?=$row->test_id?>/<?=$question->id?><?=$type?>">
-      <button class="btn btn-danger text-white"><i class="fa fa-trash-alt"></i></button>
-      </a>
+      <div class="card" style="width: 18rem;">
+        <div class="card-header">
+          multiple Choices
+        </div>
+        <ul class="list-group list-group-flush">
+
+       <?php $choices = json_decode($question->choices);?>
+       <?php foreach($choices as $letter => $answer):?>   
+          <li class="list-group-item"><?=$letter?>: <?=$answer?>
+       
+          <?php if(trim($letter) == trim($question->correct_answer)):?>
+          <i class="fa fa-check float-right"></i>
+        <?php endif;?>
+        </li>
+
+       <?php endforeach;?>   
+
+        </ul>
+      </div>
+       <br>
+        <p class="card-text"><b>Answer</b> <?=esc($question->correct_answer)?></p>
+      <?php endif;?>
+
+    <p class="card-text float-right">
+
+    <?php if($row->editable) : ?>
+        <a href="<?=ROOT?>/single_test/editquestion/<?=$row->test_id?>/<?=$question->id?><?=$type?>">
+          <button class="btn btn-info text-white pe-1"><i class="fa fa-edit"></i></button>
+        </a>
+
+        <a href="<?=ROOT?>/single_test/deletequestion/<?=$row->test_id?>/<?=$question->id?><?=$type?>">
+          <button class="btn btn-danger text-white"><i class="fa fa-trash-alt"></i></button>
+          </a>
+      <?php endif;?>
+
       </p>
       <!-- </div>
       <div class="card-footer text-muted"> -->

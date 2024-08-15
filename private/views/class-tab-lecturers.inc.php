@@ -8,13 +8,17 @@
                 </div>
             </form>  
             <div> 
+
+<?php if(Auth::access('lecturer')):?>     
            <a href="<?=ROOT?>/single_class/lecturersadd/<?=$row->class_id?>?select=true">
           <button class="btn btn-sm btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Add New lecturer</i></button>
         </a>
-
+       
         <a href="<?=ROOT?>/single_class/lecturersremove/<?=$row->class_id?>?select=true">
           <button class="btn btn-sm btn-primary"><i class="fa fa-minus">&nbsp;&nbsp;Remove lecturer</i></button>
         </a>
+<?php endif;?>
+
         </div>  
     </nav>
     <br>

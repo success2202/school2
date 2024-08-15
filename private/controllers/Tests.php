@@ -28,9 +28,9 @@ class Tests extends controller
              
          }else{
             $test = new Tests_model();
-          $mytable = "test_students";
+          $mytable = "class_students";
           if(Auth::getRank() == 'lecturer'){
-            $mytable = "test_lecturers";
+            $mytable = "class_lecturers";
           }
 
           $query = "select * from $mytable where user_id = :user_id && disabled = 0";
@@ -44,13 +44,16 @@ class Tests extends controller
          $arr['find'] = $find; 
         }
 
-          $arr['stdnt_tests'] = $test->query($query,$arr);
+          $arr['stdnt_classes'] = $test->query($query,$arr);
          
           //getting the test 
           $data = array();
-          if($arr['stdnt_tests']){
-              foreach ($arr['stdnt_tests'] as $key => $arow) {
-                $data[] = $test->first('test_id', $arow->test_id);
+          if($arr['stdnt_classes']){
+              foreach ($arr['stdnt_classes'] as $key => $arow) {
+                $a = $test->where('class_id', $arow->class_id);
+                if(is_array($a)){
+                    $data = array_merge($data, $a); //getting the test result and adding it to an array data
+                }
               }
           }
          }
@@ -58,7 +61,7 @@ class Tests extends controller
         $crumbs[] = ['tests', 'tests'];
           $this->view('tests',[
             'crumbs'=>$crumbs,
-            'rows'=>$data]);
+            'test_rows'=>$data]);
     }
     
     //add school

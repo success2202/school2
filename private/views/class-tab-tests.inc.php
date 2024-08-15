@@ -14,7 +14,7 @@
 
     <!-- displays the test on the test tab -->
     <table class="table table-striped table-hover">
-    <tr><th>Details</th><th>Test</th> <th>Created By</th><th>Active</th><th>Date</th> <th>ACTION</th>
+    <tr><th>Details</th><th>Test</th> <th>Created By</th><th>Active</th><th>Taken</th><th>Date</th> <th>ACTION</th>
     <th>
    
     </th>
@@ -30,7 +30,10 @@
                  </a>
             </td>
             <?php  $active = $row->disabled ? "No":"Yes"; ?>
-            <td><?=$row->test?> <td><?=$row->user->firstname?>  <?=$row->user->lastname?> </td> <td><?=$active ?> </td> <td><?=get_date($row->date)?></td>
+            <td><?=$row->test?> </td> <td><?=$row->user->firstname?>  <?=$row->user->lastname?> </td> 
+            <td><?=$active ?> </td> 
+            <td><?=has_taken_test($row->test_id)?> </td>
+            <td><?=get_date($row->date)?></td>
             <td>
                 
             <?php if(Auth::access('lecturer')): ?>

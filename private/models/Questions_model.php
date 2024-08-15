@@ -30,6 +30,20 @@ class Questions_model extends Model
     {
        $this->errors['question'] = "please add a valid question";
     }
+
+    //check for multiple choice answers
+    $num = 0;
+    $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    foreach($DATA as $key => $value){
+        if(strstr($key, 'choice')){
+            if(empty($value))
+            {
+                $this->errors['choice'.$num] = "please add a valid answer in choice".$letters[$num];  
+            }
+            $num++;
+        }
+    }
+    //checking answer if is empty
     if(isset($DATA['correct_answer'])){
         
        if(empty($DATA['correct_answer']))

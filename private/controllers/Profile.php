@@ -32,11 +32,7 @@ class Profile extends controller
             $mytable = "class_lecturers";
           }
 
-          // $lect = new Lecturers_model();
-          // $data['lect_classes'] = $lect->where('user_id', $id);
-
-          //$stdnt = new Students_model();
-          //fetching student that is not disabled
+         
           $query = "select * from $mytable where user_id = :user_id && disabled = 0";
           $data['stdnt_classes'] = $class->query($query,['user_id'=>$id]);
          
@@ -47,7 +43,40 @@ class Profile extends controller
                 $data['student_classes'][] = $class->first('class_id', $arow->class_id);
               }
           }
+
+        }else
+
+          if($data['page_tab'] == 'tests' && $row)
+          {
+            $class = new Classes_model();
+            $mytable = "class_students";
+            if($row->rank == 'lecturer'){
+              $mytable = "class_lecturers";
+            }
+
+         
+          $query = "select * from $mytable where user_id = :user_id && disabled = 0";
+          $data['stdnt_classes'] = $class->query($query,['user_id'=>$id]);
+         
+          //getting the class the student belong to
+          $data['student_classes'] = array();
+          if($data['stdnt_classes']){
+              foreach ($data['stdnt_classes'] as $key => $arow) {
+                $data['student_classes'][] = $class->first('class_id', $arow->class_id);
+              }
+          }
+          $class_ids =[];
+          foreach($data['student_classes'] as $key => $class_row){
+            $class_ids[] = $class_row->class_id;
+          }
+          //converting an array into a string
+          $id_str = "'" . implode("','", $class_ids) . "'";
+          $query = "select * from tests where class_id in ($id_str)";
+          $tests_model = new Tests_model();
+          $tests = $tests_model->query($query);
+          $data['test_rows'] = $tests;
         }
+
         $data['row'] =$row;
         $data['crumbs'] =$crumbs;
 

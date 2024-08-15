@@ -50,20 +50,43 @@ if(isset($_GET['type']) && $_GET['type'] == 'objective'){
     <?php if(isset($_GET['type']) && $_GET['type'] == "multiple"): ?>
         <div class="card" style="">
         <div class="card-header bg-info text-white">
-            multiple Choice Answers <button type="button" class="btn btn-warning btn-sm float-right">Add Choice</button>
+            multiple Choice Answers <button onclick="add_choices()" type="button" class="btn btn-warning btn-sm float-right">Add Choice</button>
         </div>
-        <ul class="list-group list-group-flush">
+        <ul class="list-group list-group-flush choice-list">
+
+    <?php if(isset($_POST['choice0'])):?>
+        <?php
+        //check for multiple choice answers
+        $num = 0;
+        $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+        
+        foreach($_POST as $key => $value){
+            if(strstr($key, 'choice')){
+
+                    ?>
+                    <li class="list-group-item">
+                    <?=$letters[$num]?> : <input type="text" class="form-control" value="<?=$value?>" name="<?=$key?>" placeholder="type your answwe here"> 
+                    <label style="cursor: pointer;"> <input type="radio" <?=$letters[$num] == $_POST['correct_answer'] ? 'checked' : '';?> value ="<?=$letters[$num]?>" name="correct_answer"> Correct Answer </label>
+                    </li> 
+                    <?php 
+                $num++;
+            }
+        }
+        ?>
+    <?php else:?>
             <li class="list-group-item">
-               A : <input type="text" class="form-control" name="choice1" placeholder="typr your answwe here"> 
-           <input type="radio" name="correct_answer"> Correct Answer
+               A : <input type="text" class="form-control" name="choice0" placeholder="type your answwe here"> 
+               <label style="cursor: pointer;"><input type="radio" value="A" name="correct_answer"> Correct Answer </label>
             </li>
 
             <li class="list-group-item">
-               B : <input type="text" class="form-control" name="choice1" placeholder="typr your answwe here"> 
-           <input type="radio" name="correct_answer"> Correct Answer
+               B : <input type="text" class="form-control" name="choice1" placeholder="type your answwe here"> 
+           <label style="cursor: pointer;"><input type="radio" value="B" name="correct_answer"> Correct Answer </label>
             </li>
-        </ul>
+        <?php endif;?>
         
+        </ul>
+
         </div><br>
     <?php endif;?>
 
@@ -73,3 +96,17 @@ if(isset($_GET['type']) && $_GET['type'] == 'objective'){
           <button class="btn btn-sm btn-danger float-right">Save Question</button>
      <div></div>
 </form>
+
+<script>
+    var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    function add_choices()
+    {
+    var choices = document.querySelector(".choice-list");
+    if(choices.children.length < letters.length){
+        choices.innerHTML += `<li class="list-group-item">
+            ${letters[choices.children.length]} : <input type="text" class="form-control" name="choice${choices.children.length}" placeholder="type your answer here"> 
+       <label style="cursor: pointer;"> <input type="radio" value="${letters[choices.children.length]}" name="correct_answer"> Correct Answer </label>
+        </li>`;
+        }
+    }
+</script>

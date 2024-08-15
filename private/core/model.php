@@ -106,7 +106,7 @@ public function update($id,$data){
             $data = $this->$func($data);
         }
     }
-
+   
     $str = "";
     foreach($data as $key => $value){
         $str .= $key. "=:". $key.",";
