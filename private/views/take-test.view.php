@@ -4,7 +4,7 @@
     <div class="container-fluid p-4 shadow mx-auto" style="max-width: 1000px;">
     <?php $this->view('includes/crumbs',['crumbs'=>$crumbs])?>
 
-    <?php if($row): ?>
+    <?php if($row && !($row->disabled && Auth::access('student'))): ?>
    
     <!-- <div class="row"> -->
     <div>
@@ -24,8 +24,8 @@
            
            <?php $active = $row->disabled ? "No": "Yes";?>
         <tr>
-            <td><b>Class:</b>  <br><hr><?=$row->class->class?></td>
-           <td colspan = "5"><b>Test Description</b><br><hr><?=esc($row->description)?></td>
+            <td><b>Class:</b> <?=$row->class->class?></td>
+           <td colspan = "5"><b>Test Description | </b> <?=esc($row->description)?></td>
         </tr>
         
           

@@ -12,6 +12,7 @@ class User extends Model
         'gender',
         'date',
         'rank',
+        'school_id',
         'image',];
 
     protected $beforeInsert = [
@@ -100,8 +101,10 @@ class User extends Model
    public function hash_password($data){
     if(isset($data['password'])){
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-            return $data;
+           
      }
+     return $data;
+     
     }
-
+    
 }

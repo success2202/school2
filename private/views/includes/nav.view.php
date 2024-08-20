@@ -50,6 +50,16 @@
         <li class="nav-item">
           <a class="nav-link" href="<?=ROOT?>/tests">TEST</a>
         </li>
+
+        <?php if(Auth::access('lecturer')):?>
+          <li class="nav-item">
+            <a class="nav-link" href="<?=ROOT?>/tests_to_mark">UNMARKED TEST</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<?=ROOT?>/marked_tests">MARKED TEST</a>
+          </li>
+        <?php endif;?>
+
         <!-- <li class="nav-item">
           <a class="nav-link" href="<?=ROOT?>/signup">SIGNUP</a>
         </li> -->

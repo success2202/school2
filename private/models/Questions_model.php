@@ -78,11 +78,13 @@ class Questions_model extends Model
 
    public function get_user($data){
     $user = new User();
-    foreach($data as $key => $row){
-      $result = $user->where('user_id', $row->user_id);
-        $data[$key]->user = is_array($result) ? $result[0] : false;
+    //checking if user_id exist for total questions
+    if(isset($data[0]->user_id)){ 
+        foreach($data as $key => $row){
+        $result = $user->where('user_id', $row->user_id);
+            $data[$key]->user = is_array($result) ? $result[0] : false;
     }
-    
+}
     return $data;
 
 }

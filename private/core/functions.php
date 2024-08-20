@@ -146,3 +146,72 @@ $class = new Classes_model();
    
     return false;
 }
+
+
+ function get_answer($saved_answers, $id)
+{
+    if(!empty($saved_answers)){
+        foreach($saved_answers as $row) {
+            if($id == $row->question_id)
+            {
+                return $row->answer;
+            }
+        }
+    }
+    return '';
+}
+
+
+ function get_answer_percentage1($questions, $saved_answers)
+{
+    $total_answer_count = 0;
+    if(!empty($questions))
+    {
+        foreach($questions as $quest){
+            $answer = get_answer($saved_answers, $quest->id);
+            if(trim($answer) != ""){
+                $total_answer_count++;
+            }
+        }
+    }
+    if($total_answer_count > 0)
+    {
+        $total_questions = count($questions);
+        return ($total_answer_count / $total_questions) * 100;
+    }
+
+    return 0;
+}
+
+//getting the test and userid for the test view percentage
+function get_answer_percentage($test_id, $user_id)
+{
+    $quest = new Questions_model();
+    $questions = $quest->query('select * from test_questions where test_id =:test_id', ['test_id'=>$test_id]);
+   
+    $answers = new Answers_model();
+    $query = "select question_id,answer from answers where user_id = :user_id && test_id = :test_id";
+    $saved_answers = $answers->query($query,[
+            'user_id'=> $user_id,
+            'test_id'=> $test_id,
+            
+    ]);
+
+    $total_answer_count = 0;
+    if(!empty($questions))
+    {
+        foreach($questions as $quest){
+            $answer = get_answer($saved_answers, $quest->id);
+            if(trim($answer) != ""){
+                $total_answer_count++;
+            }
+        }
+    }
+    if($total_answer_count > 0)
+    {
+        $total_questions = count($questions);
+        return ($total_answer_count / $total_questions) * 100;
+    }
+
+    return 0;
+}

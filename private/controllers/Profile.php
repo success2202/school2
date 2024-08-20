@@ -49,9 +49,12 @@ class Profile extends controller
           if($data['page_tab'] == 'tests' && $row)
           {
             $class = new Classes_model();
+
+            $disabled = "disabled = 0 &&";
             $mytable = "class_students";
             if($row->rank == 'lecturer'){
               $mytable = "class_lecturers";
+              $disabled = "";
             }
 
          
@@ -71,7 +74,7 @@ class Profile extends controller
           }
           //converting an array into a string
           $id_str = "'" . implode("','", $class_ids) . "'";
-          $query = "select * from tests where class_id in ($id_str)";
+          $query = "select * from tests where $disabled class_id in ($id_str)";
           $tests_model = new Tests_model();
           $tests = $tests_model->query($query);
           $data['test_rows'] = $tests;

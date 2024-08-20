@@ -1,11 +1,13 @@
 
 <div class="card-group justify-content-center">
-<table class="table table-striped table-hover">
-    <tr><th>Details</th><th>Class Name</th> <th>Created by</th><th>Date</th> <th>ACTION</th>
-    <th>
-   
-    </th>
-</tr>
+
+<div class="table-responsive conainer-fluid p-0">
+    <table class="table table-striped table-hover">
+     <tr><th>Details</th><th>Class Name</th> <th>Created by</th><th>Date</th> <th>ACTION</th>
+        <th>
+    
+        </th>
+     </tr>
 
     <?php if(isset($rows) && $rows):?>
         <?php foreach($rows as $row):?>
@@ -39,4 +41,5 @@
     <?php endif; ?> <br>
 
     </table>
+</div>
 </div>

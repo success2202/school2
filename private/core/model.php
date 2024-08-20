@@ -11,9 +11,21 @@ class Model extends Database
         }
     }
  
-    public function where($column,$value,$orderby='desc'){
+    public function get_primary_key($table){
+        $query = "SHOW KEYS from $table WHERE Key_name = 'PRIMARY'";
+        $db = new Database();
+        $data = $db->query($query);
+        if(!empty($data[0]))
+        {
+            return $data[0]->Column_name;
+        }
+        return 'id';
+    }
+    
+    public function where($column,$value,$orderby='desc', $limit = 4, $offset = 0){
+        $primary_key = $this->get_primary_key($this->table);
         $column = addslashes($column);
-        $query = "select * from $this->table where $column = :value order by id $orderby";
+        $query = "select * from $this->table where $column = :value order by $primary_key $orderby limit $limit offset $offset";
         $data = $this->query($query, [
                     'value'=>$value
         ]);
@@ -30,8 +42,9 @@ class Model extends Database
     }
 
     public function first($column,$value,$orderby='desc'){
+        $primary_key = $this->get_primary_key($this->table);
         $column = addslashes($column);
-        $query = "select * from $this->table where $column = :value order by id $orderby";
+        $query = "select * from $this->table where $column = :value order by $primary_key  $orderby";
         $data = $this->query($query, [
                     'value'=>$value
         ]);
@@ -51,8 +64,9 @@ class Model extends Database
                 return $data;
     }
 
-    public function findAll($orderby = 'desc'){
-        $query = "select * from $this->table order by id $orderby";
+    public function findAll($orderby = 'desc', $limit = 10, $offset = 0){
+        $primary_key = $this->get_primary_key($this->table);
+        $query = "select * from $this->table order by $primary_key  $orderby limit $limit offset $offset";
         $data =  $this->query($query);
 
         //run functions after select
@@ -91,31 +105,37 @@ public function insert($data){
 }
 
 public function update($id,$data){
+   
 //remove unwabted columns
     if(property_exists($this, 'allowedColumns')){
         foreach($data as $key => $column){
             if(!in_array($key, $this->allowedColumns)){
                 unset($data[$key]);
             }
-            
-        }
-    }
-//run functions before updatae
-    if(property_exists($this, 'beforeUpdate')){
-        foreach($this->beforeUpdate as $func){
-            $data = $this->$func($data);
         }
     }
    
+//run functions before updatae
+    if(property_exists($this, 'beforeUpdate'))
+    {
+        foreach($this->beforeUpdate as $func)
+        {
+            $data = $this->$func($data);
+        }
+    }
+    
     $str = "";
     foreach($data as $key => $value){
         $str .= $key. "=:". $key.",";
     }
+   
     $str = trim($str,",");
+
     $data['id']=$id;
-    //print_r($data);
+    //var_dump($data); die;
     $query = "update $this->table set $str where id = :id ";
-    return $this->query($query, $data);
+    return $this->query($query,$data);
+  //var_dump($data); die;
 }
 
 public function delete($id){

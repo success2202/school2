@@ -28,9 +28,11 @@ class Tests extends controller
              
          }else{
             $test = new Tests_model();
-          $mytable = "class_students";
+            $disabled = "disabled = 0 &&";
+            $mytable = "class_students";
           if(Auth::getRank() == 'lecturer'){
             $mytable = "class_lecturers";
+            $disabled = "";
           }
 
           $query = "select * from $mytable where user_id = :user_id && disabled = 0";
@@ -51,6 +53,8 @@ class Tests extends controller
           if($arr['stdnt_classes']){
               foreach ($arr['stdnt_classes'] as $key => $arow) {
                 $a = $test->where('class_id', $arow->class_id);
+                $query = "select * from tests where $disabled class_id = :class_id";
+                $a = $tests->query($query,['class_id'=>$arow->class_id]);
                 if(is_array($a)){
                     $data = array_merge($data, $a); //getting the test result and adding it to an array data
                 }

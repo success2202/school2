@@ -87,6 +87,22 @@ public function get_class($data){
 
 }
 
+//getting the test answers
+public function get_answered_test($test_id, $user_id){
+
+        $db = new Database();
+        $arr = ['test_id'=>$test_id, 'user_id'=>$user_id];
+        $res = $db->query("select * from answered_test where test_id = :test_id && user_id = :user_id limit 1",  $arr);
+
+        if(is_array($res))
+        {
+            return $res[0];
+        }
+        return false; 
+    }
+
+
+
 //    private function random_string($length){
 //     $array = array(0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 //     $text = "";

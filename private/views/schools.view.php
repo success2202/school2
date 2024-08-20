@@ -30,10 +30,10 @@
                 <button class="btn-sm btn btn-danger"><i class="fa fa-trash-alt"></i></button>
             </a>
             &nbsp;&nbsp;
-            <a href="<?=ROOT?>/switch_school/<?=$row->user->id?>">
-                <button class="btn-sm btn btn-success">Switch to school &nbsp;&nbsp;<i class="fa fa-chevron-right"></i></button>
+            <a href="<?=ROOT?>/switch_school/<?=$row->id?>">
+                <button class="btn-sm btn btn-success">Switch to school </button>
             </a>
-
+           
             </td>
             </tr>
         <?php endforeach; ?>
