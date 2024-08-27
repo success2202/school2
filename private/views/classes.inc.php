@@ -3,10 +3,12 @@
 
 <div class="table-responsive conainer-fluid p-0">
     <table class="table table-striped table-hover">
-     <tr><th>Details</th><th>Class Name</th> <th>Created by</th><th>Date</th> <th>ACTION</th>
+     <tr><th>Details</th><th>Class Name</th> <th>Created by</th><th>Date</th>
+     <?php if(Auth::access('lecturer')): ?> <th>ACTION</th> <?php else:?>
         <th>
     
         </th>
+        <?php endif;?>
      </tr>
 
     <?php if(isset($rows) && $rows):?>

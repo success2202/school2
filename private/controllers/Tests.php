@@ -27,7 +27,7 @@ class Tests extends controller
 
              
          }else{
-            $test = new Tests_model();
+            //$test = new Tests_model();
             $disabled = "disabled = 0 &&";
             $mytable = "class_students";
           if(Auth::getRank() == 'lecturer'){
@@ -35,26 +35,28 @@ class Tests extends controller
             $disabled = "";
           }
 
-          $query = "select * from $mytable where user_id = :user_id && disabled = 0";
+          $query = "select * from $mytable where user_id = :user_id && disabled = 0 ";
           
           $arr['user_id'] = Auth::getUser_id();
-
-    if(isset($_GET['find']))
-        {
-         $find = '%' . $_GET['find'] . '%';
-         $query = "select tests.test, {$mytable}.* from $mytable join tests on tests.test_id ={$mytable}.test_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && tests.test like :find";
-         $arr['find'] = $find; 
-        }
-
-          $arr['stdnt_classes'] = $test->query($query,$arr);
+          $arr['stdnt_classes'] = $tests->query($query,$arr);
          
           //getting the test 
           $data = array();
+          $arr2 = array();
           if($arr['stdnt_classes']){
               foreach ($arr['stdnt_classes'] as $key => $arow) {
-                $a = $test->where('class_id', $arow->class_id);
+                $a = $tests->where('class_id', $arow->class_id);
                 $query = "select * from tests where $disabled class_id = :class_id";
-                $a = $tests->query($query,['class_id'=>$arow->class_id]);
+                $arr2['class_id'] = $arow->class_id;
+                if(isset($_GET['find']))
+                {
+                 $find = '%' . $_GET['find'] . '%';
+                 $query = "select * from tests where $disabled class_id = :class_id && test like :find";
+                 //$query = "select tests.test, {$mytable}.* from $mytable join tests on tests.test_id ={$mytable}.test_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && tests.test like :find";
+                 $arr2['find'] = $find; 
+                }
+
+                $a = $tests->query($query,$arr2);
                 if(is_array($a)){
                     $data = array_merge($data, $a); //getting the test result and adding it to an array data
                 }
@@ -65,7 +67,8 @@ class Tests extends controller
         $crumbs[] = ['tests', 'tests'];
           $this->view('tests',[
             'crumbs'=>$crumbs,
-            'test_rows'=>$data]);
+            'test_rows'=>$data
+        ]);
     }
     
     //add school

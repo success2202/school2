@@ -22,6 +22,12 @@
                     <button class="btn btn-sm btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;view class</i></button>
                 </a>
                 </td>
+
+                <td>
+                <a href="<?=ROOT?>/single_test/<?=$row->test_id?>?tab=scores">
+                    <button class="btn btn-sm btn-primary"><i class="fa fa-plus">&nbsp;&nbsp;Student Scores</i></button>
+                </a>
+                </td>
             </tr>
            
            <?php $active = $row->disabled ? "No": "Yes";?>
@@ -77,6 +83,10 @@
             case 'delete':
                 include(views_path('test-tab-delete'));
                  break;
+
+            case 'scores':
+                include(views_path('test-tab-scores'));
+                break;
             
             
             default:

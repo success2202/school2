@@ -1,27 +1,30 @@
 
 <!-- Example single danger button -->
- <nav class="navbar">
-  <center>
-    <h5>Test Questions</h5>
-    <p><b>Total Questions:</b> <?=$total_question?></p>
-</center>
-<div class="btn-group">
-  <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="fa fa-bars"></i> Add Test
-  </button>
-  <ul class="dropdown-menu dropdown-menu-right">
-    <li><a class="dropdown-item" href="<?=ROOT?>/single_test/addquestion/<?=$row->test_id?>?type=multiple">
-        Add Multtiple choice Question</a></li>
-    <li><a class="dropdown-item" href="<?=ROOT?>/single_test/addquestion/<?=$row->test_id?>?type=objective">
-        Add Objective Question</a></li>
+<?php if($row->disabled) : ?>
+      <nav class="navbar">
+      <center>
+        <h5>Test Questions</h5>
+        <p><b>Total Questions:</b> <?=$total_question?></p>
+    </center>
+    <div class="btn-group">
+      <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-bars"></i> Add Test
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li><a class="dropdown-item" href="<?=ROOT?>/single_test/addquestion/<?=$row->test_id?>?type=multiple">
+            Add Multtiple choice Question</a></li>
+        <li><a class="dropdown-item" href="<?=ROOT?>/single_test/addquestion/<?=$row->test_id?>?type=objective">
+            Add Objective Question</a></li>
 
-    <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="<?=ROOT?>/single_test/addquestion/<?=$row->test_id?>">
-        Add Subjectiive Question</a></li>
-  </ul>
-</div>
-</nav>
-<hr>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="<?=ROOT?>/single_test/addquestion/<?=$row->test_id?>">
+            Add Subjectiive Question</a></li>
+      </ul>
+    </div>
+    </nav>
+<hr>    
+<?php endif;?>
+
 
 <?php if(isset($questions) && is_array($questions)): ?>
   <?php $num = $total_question + 1?>

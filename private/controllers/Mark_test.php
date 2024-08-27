@@ -1,12 +1,12 @@
 <?php
-//take test controller
+//mark test controller
 
-class Take_test extends controller
+class Mark_test extends controller
 {
-    public function index($id = '')
+    public function index($id = '',$user_id = '')
     {
       $errors = array();
-      if(!Auth::access('student'))
+      if(!Auth::access('lecturer'))
       {
           $this->redirect('access_denied');
       }
@@ -15,9 +15,9 @@ class Take_test extends controller
     //   echo $tests->get_primary_key('tests');
     //   die;
         $answers = new Answers_model();
-        $query = "select question_id,answer from answers where user_id = :user_id && test_id = :test_id";
+        $query = "select question_id,answer,answer_mark from answers where user_id = :user_id && test_id = :test_id";
         $saved_answers = $answers->query($query,[
-                'user_id'=> Auth::getUser_id(),
+                'user_id'=> $user_id,
                 'test_id'=> $id,
                 
         ]);
@@ -40,30 +40,15 @@ class Take_test extends controller
         $db = New Database();
 // if something was posted
         if(count($_POST) > 0)
-        {
-            //insert your answer to answer_test table
-            $arr1['user_id'] = Auth::getUser_id();
-            $arr1['test_id'] = $id;
-
-        
-            //check if there is already answered questions on the answered test table
-            $check = $db->query("select id from answered_test where user_id = :user_id && test_id = :test_id limit 1", $arr1);
-            
-            if(!$check){
-
-                $arr1['date'] = date("Y-m-d H:i:s");
-                $query = "insert into answered_test (user_id,test_id,date) values (:user_id, :test_id, :date)";
-                $db->query($query, $arr1);
-            }
+        { 
             //save answers to database 
             foreach ($_POST as $key => $value) {
                 # code...
                 if(is_numeric($key)){
-                    $arr['user_id'] = Auth::getUser_id();
+                    $arr['user_id'] = $user_id;
                     $arr['question_id'] = $key;
-                    $arr['date'] = date("Y-m-d H:i:s");
                     $arr['test_id'] = $id;
-                    $arr['answer'] = trim($value);
+                    $arr['answer_mark'] = trim($value);
 
                     //check if answer already exist
                     $query = "select id from answers where user_id = :user_id && test_id = :test_id && question_id = :question_id limit 1 ";
@@ -72,16 +57,13 @@ class Take_test extends controller
                             'test_id'=> $arr['test_id'],
                             'question_id'=> $arr['question_id'],
                     ]);
-                    if(!$check)
+            if($check)
                 {
-                    $answers->insert($arr);
-                    
-                }else{
+                   
                     $answer_id = $check[0]->id;
 
                     unset($arr['user_id']);
                     unset($arr['question_id']);
-                    unset($arr['date']);
                     unset($arr['test_id']);
                     $answers->update($answer_id,$arr);
                 }
@@ -94,7 +76,7 @@ class Take_test extends controller
             {
                 $page_number = "&page=".$_GET['page'];
             }
-            $this->redirect('take_test/'.$id.$page_number);
+            $this->redirect('mark_test/'.$id.'/'.$user_id.$page_number);
         }
 
         $limit = 4;
@@ -107,38 +89,60 @@ class Take_test extends controller
         $all_questions = $quest->query('select * from test_questions where test_id =:test_id', ['test_id'=>$id]);
        
         $total_question = is_array($all_questions) ? count($all_questions): 0; //geting total question
-
-        //get answered tests row
-        // $arr1=[];
-        // $arr1['user_id'] = Auth::getUser_id();
-        // $arr1['test_id'] = $id;
-        // $data['answered_test_row'] = $db->query("select * from answered_test where user_id = :user_id && test_id = :test_id limit 1", $arr1);
-        // if(is_array($data['answered_test_row']))
-        // {
-        //     $data['answered_test_row'] = $data['answered_test_row'][0];
-        // }
-
-        //if its a test submit
-        if(isset($_GET['submit'])){
+//if its a test unsubmit
+        if(isset($_GET['unsubmit'])){
         
-            $query = "update answered_test set submitted = 1, submitted_date = :sub_date where test_id = :test_id && user_id = :user_id limit 1";
+            $query = "update answered_test set submitted = 0, submitted_date = :sub_date where test_id = :test_id && user_id = :user_id limit 1";
             $tests->query($query,['test_id'=>$id,
-             'user_id'=>Auth::getUser_id(),
-            'sub_date'=>date("Y-m-d H:i:s")]);
+             'user_id'=>$user_id,
+            'sub_date'=>''
+            ]);
+        }
+//if its auto mark
+        if(isset($_GET['unsubmit'])){
+        
+            $query = "update answered_test set submitted = 0, submitted_date = :sub_date where test_id = :test_id && user_id = :user_id limit 1";
+            $tests->query($query,['test_id'=>$id,
+             'user_id'=>$user_id,
+            'sub_date'=>''
+            ]);
         }
 
-       $data['answered_test_row']  = $tests->get_answered_test($id, Auth::getUser_id());   
-       
+        // if is set as marked
+        if(isset($_GET['set_marked']) && (get_mark_percentage($id, $user_id) >= 100)){
+        
+            $query = "update answered_test set marked = 1, marked_by = :mark_by, marked_date = :mark_date, score = :score where test_id = :test_id && user_id = :user_id limit 1";
+            $tests->query($query,['test_id'=>$id,
+             'user_id'=>$user_id,
+             'mark_by'=>Auth::getUser_id(),
+            'mark_date'=>date("Y-m-d H:i:s"),
+            'score'=>get_score_percentage($id, $user_id),
+            ]);
+            $this->redirect('mark_test/'.$id.'/'.$user_id);
+        }
+
+       $data['answered_test_row']  = $tests->get_answered_test($id, $user_id);   
+//set submitted variable
        $data['submitted'] = false;
        if(isset($data['answered_test_row']->submitted) && $data['answered_test_row']->submitted ==1)
         {
             $data['submitted']  = true;
         }
+//set marked variables 
+        $data['marked'] = false;
+        if(isset($data['answered_test_row']->marked) && $data['answered_test_row']->marked ==1)
+         {
+             $data['marked']  = true;
+         }
 
         //get student information
-        $user = new User();
-        $data['student_row'] = $user->first('user_id', Auth::getUser_id());
-        
+        if($data['answered_test_row']){
+
+            $user = new User();
+            $data['student_row'] = $user->first('user_id', $data['answered_test_row']->user_id);
+         
+        }
+
         $data['row']                = $row;
         $data['crumbs']             = $crumbs;
         $data['page_tab']           = $page_tab;
@@ -149,48 +153,13 @@ class Take_test extends controller
         $data['errors']             = $errors;
         $data['pager']              = $pager;
         $data['saved_answers']      = $saved_answers;
+        $data['user_id']      = $user_id;
        
 
         //show($saved_answers);
-        $this->view('take-test',$data);
+        $this->view('mark-test',$data);
 
         }
-
-
-// protected function get_answer($saved_answers, $id)
-// {
-//     if(!empty($saved_answers)){
-//         foreach($saved_answers as $row) {
-//             if($id == $row->question_id)
-//             {
-//                 return $row->answer;
-//             }
-//         }
-//     }
-//     return '';
-// }
-
-
-// public function get_answer_percentage($questions, $saved_answers)
-// {
-//     $total_answer_count = 0;
-//     if(!empty($questions))
-//     {
-//         foreach($questions as $quest){
-//             $answer = $this->get_answer($saved_answers, $quest->id);
-//             if(trim($answer) != ""){
-//                 $total_answer_count++;
-//             }
-//         }
-//     }
-//     if($total_answer_count > 0)
-//     {
-//         $total_questions = count($questions);
-//         return ($total_answer_count / $total_questions) * 100;
-//     }
-
-//     return 0;
-// }
 
    }
 

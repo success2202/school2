@@ -4,6 +4,7 @@
 <title>home</title>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <meta charset="UTF-8">
   <meta name="description" content="Free Web tutorials">
   <meta name="keywords" content="HTML, CSS, JavaScript">

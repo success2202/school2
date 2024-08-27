@@ -23,18 +23,29 @@ class Single_test extends controller
         }
 //disabled test
 if(isset($_GET['disabled'])){
+
     if($row->disabled){
         $disabled = 0;
     }else{
         $disabled = 1;
     }
-    $query = "update tests set disabled = $disabled where id = :id limit 1";
-    $tests->query($query,['id'=>$row->id]);
-}
+
+        $query = "update tests set disabled = $disabled where id = :id limit 1";
+        $tests->query($query,['id'=>$row->id]);
+        $this->redirect('single_test/'.$id);
+    }
 
         $page_tab = 'view';
+        $student_scores = false;
+        if(isset($_GET['tab']) && $_GET['tab'] == "scores")
+        {
+            //getting students scores
+            $page_tab = 'scores';
+            $answered_test = New Answered_test();
+            $student_scores = $answered_test->query("select * from answered_test where test_id = :test_id && submitted = 1 && marked = 1 order by score desc", ['test_id'=>$id]);
+        }
 
-        $limit = 3;
+        $limit = 4;
         $pager = new Pager($limit);
         $offset = $pager->offset;
        
@@ -48,9 +59,10 @@ if(isset($_GET['disabled'])){
         $data['page_tab']           = $page_tab;
         $data['results']            = $results;
         $data['questions']          = $questions;
-        $data['total_question']    = $total_question;
+        $data['total_question']     = $total_question;
         $data['errors']             = $errors;
         $data['pager']              = $pager;
+        $data['student_scores']     = $student_scores;
 
         $this->view('single-test',$data);
 

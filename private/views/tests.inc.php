@@ -4,11 +4,10 @@
 <div class="table-responsive container-fluid p-0">
     <table class="table table-striped table-hover">
     <tr>
-        
-    <?php if(Auth::access('lecturer')):?>
-        <th>View Details</th>
-        <?php endif;?>
-        <th>Test Name</th> <th>Created by</th> <th>Active</th> <th>Date</th> <th>Answer %</th> <th>Action</th> 
+    <?php if(Auth::access('lecturer')):?> 
+    <th></th> 
+    <?php endif;?>
+    <th>Test Name</th> <th>Created by</th> <th>Active</th> <th>Date</th> <th>Answer %</th><th></th>
         
     </tr>
 
@@ -51,7 +50,7 @@
         <?php endforeach; ?>
 
         <?php else:?>
-        <tr><td colspan="5"><center>No tests were found at the moment</center></td></tr>
+        <tr><td colspan="10"><center>No tests were found at the moment</center></td></tr>
     <?php endif; ?> <br>
 
     </table>

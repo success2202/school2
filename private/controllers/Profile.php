@@ -48,14 +48,16 @@ class Profile extends controller
 
           if($data['page_tab'] == 'tests' && $row)
           {
-            $class = new Classes_model();
+            if($row->rank != 'student'){
 
-            $disabled = "disabled = 0 &&";
-            $mytable = "class_students";
-            if($row->rank == 'lecturer'){
-              $mytable = "class_lecturers";
-              $disabled = "";
-            }
+              $class = new Classes_model();
+
+              $disabled = "disabled = 0 &&";
+              $mytable = "class_students";
+              if($row->rank == 'lecturer'){
+                $mytable = "class_lecturers";
+                $disabled = "";
+              }
 
          
           $query = "select * from $mytable where user_id = :user_id && disabled = 0";
@@ -78,8 +80,27 @@ class Profile extends controller
           $tests_model = new Tests_model();
           $tests = $tests_model->query($query);
           $data['test_rows'] = $tests;
-        }
 
+          }else{  
+
+          //get all submitted tests
+            $marked = array();
+            $tests = new Tests_model();
+                $query = "select * from answered_test where user_id = :user_id && submitted = 1 && marked = 1";
+                $answered_tests = $tests->query($query,['user_id'=>$id]);
+                
+                if(is_array($answered_tests)){
+                  
+                  foreach($answered_tests as $key => $value){ 
+                    $test_details = $tests->first('test_id', $answered_tests[$key]->test_id);
+                    $answered_tests[$key]->test_details = $test_details;
+                    //getting the test result and adding/merging it to an array data
+                }
+          }
+          $data['test_rows'] = $answered_tests;  
+        }  
+    }
+    
         $data['row'] =$row;
         $data['crumbs'] =$crumbs;
 
@@ -139,12 +160,12 @@ class Profile extends controller
         //   }
         //  }
          
-              if($_POST['rank'] == 'superAdmin' && $_SESSION['USER']->rank != 'superAdmin')
+           if($_POST['rank'] == 'superAdmin' && $_SESSION['USER']->rank != 'superAdmin')
               {
                   $_POST['rank'] == 'admin';
               }
 
-              $myrow = $user->first('user_id', $id);
+             $myrow = $user->first('user_id', $id);
               if(is_object($myrow)){
                 $user->update($myrow->id, $_POST);
               }

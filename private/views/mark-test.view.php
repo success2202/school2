@@ -4,11 +4,11 @@
     <div class="container-fluid p-4 shadow mx-auto" style="max-width: 1000px;">
     <?php $this->view('includes/crumbs',['crumbs'=>$crumbs])?>
 
-    <?php if($row && !($row->disabled && Auth::access('student'))): ?>
+    <?php if($row && $answered_test_row && $answered_test_row->submitted && !($row->disabled && Auth::access('student'))): ?>
    
     <!-- <div class="row"> -->
     <div>
-      
+        
     <center><h4><?=esc(ucwords($row->test))?></h4></center> 
     <center class="row">
         <h5 class="col">Class: <?=$row->class->class?></h5>
@@ -39,7 +39,7 @@
     <?php
         switch ($page_tab) {
             case 'view':
-                include(views_path('take-test-tab-view'));
+                include(views_path('mark-test-tab-view'));
                 break;
             
             default:

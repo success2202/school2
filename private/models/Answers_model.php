@@ -9,6 +9,8 @@ class Answers_model extends Model
         'question_id',
         'date',
         'answer',
+        'answer_mark',
+        'answer_comment',
         'test_id',
         ];
 // function that remove spaces when student want to answer questions

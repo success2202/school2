@@ -1,33 +1,48 @@
 
 <!-- get answer percentage function -->
-<?php $percentage = get_answer_percentage($row->test_id, Auth::getUser_id())?>
-
+<?php $percentage = get_answer_percentage($row->test_id, $user_id)?>
+<?php $marked_percentage = get_mark_percentage($row->test_id, $user_id)?>
 
 
 <div class="container-fluid text-center">
   <div class="text-danger"><?=$percentage?>% Answered</div>
   <div class="bg-primary" style="width: <?=$percentage?>%; height: 15px;"></div>
  
+  <!-- get mar percentage function -->
+  <div class="text-danger"><?=$marked_percentage?>% Marked</div>
+  <div class="bg-primary" style="width: <?=$marked_percentage?>%; height: 15px;"></div>
+
   <?php if($answered_test_row):?>
-    <?php if($answered_test_row->submitted):?>
+    <?php if($answered_test_row->submitted && !$marked):?>
+
       <div class="text-success">this test has  been submitted</div>
-      
-      <?php else:?>
-        <div class="text-danger">
-          this test has not been yet submitted <br>
+      <a onclick="unsubmit_test(event)" href="<?=ROOT?>/mark_test/<?=$row->test_id?>/<?=$answered_test_row->user_id?>/?unsubmit=true">
+          <button class="btn mx-1 btn-danger float-right">Unsubmit Test</button>
+      </a>
 
-          <a onclick="submit_test(event)" href="<?=ROOT?>/take_test/<?=$row->test_id?>/?submit=true">
-          <button class="btn btn-danger float-right">Submit Test</button>
-          </a>
+      <a onclick="set_test_as_marked(event)" href="<?=ROOT?>/mark_test/<?=$row->test_id?>/<?=$answered_test_row->user_id?>/?set_marked=true">
+      <button class="btn mx-1 btn-primary float-right">Set Test as Marked</button>
+      </a>
+        
+      <a onclick="auto_mark(event)" href="<?=ROOT?>/mark_test/<?=$row->test_id?>/<?=$answered_test_row->user_id?>/?auto_mark=true">
+      <button class="btn mx-1 btn-info float-right">Auto Mark</button>
+      </a>
 
-        </div>
        <?php endif;?> 
        <?php endif;?> 
 </div>
-<nav class="navbar">
+
+<?php if($marked): ?>
+  <?php $score_percentage = get_score_percentage($row->test_id, $user_id)?>
+    <center>
+      <small style="font-size: 15px;">Test Score</small> <b style="font-size: 25px;" ><?=$score_percentage?>%</b>
+    </center>
+    <nav class="navbar">
+<?php endif;?> 
+
   <center>
     <h5>Test Questions</h5>
-    <p><b>Total Questions:</b> <?=$total_question?></p>
+    <p><b>Total Questions:</b> #<?=$total_question?></p>
 </center>
 
 </nav>
@@ -35,14 +50,13 @@
 
 <?php if(isset($questions) && is_array($questions)): ?>
 
-    <form method="post">
-
         <?php $num = $pager->offset; ?>
       <?php foreach($questions as $question): $num++?>  
 
     <?php  
     //get answer function
         $myanswer = get_answer($saved_answers, $question->id);
+        $mymark = get_answer_mark($saved_answers, $question->id);
     ?> 
         <div class="card mb-4">
         <div class="card-header">
@@ -78,15 +92,11 @@
        <?php $choices = json_decode($question->choices);?>
 
        <?php foreach($choices as $letter => $answer):?>   
-          <li class="list-group-item"><?=$letter?>: <?=$answer?>
-       
-          <?php if(!$submitted):?>
-         <input class="float-right" style="transform: scale(1.4); cursor: pointer;" type="radio" name="<?=$question->id?>" <?=$myanswer == $letter ? ' checked ':''?> value="<?=$letter?>">
-         <?php else:?>
+          
+        <li class="list-group-item"><?=$letter?>: <?=$answer?>
           <?php if($myanswer == $letter):?>
             <i class="fa fa-check float right"></i>
             <?php endif;?>
-         <?php endif;?>
         </li>
 
        <?php endforeach;?>   
@@ -94,49 +104,35 @@
         </ul>
       </div>
        <br>
+
+       <hr>
+    <b>Teacher's Mark:</b>
+    
+      <div style="font-size: 25px;">
+        <?=($mymark == 1) ? '<i class="fa fa-check float-right"></i>':'<i class="fa fa-times float-right"></i>'?> 
+      </div>
       <?php endif;?>
 
       <?php if($question->question_type != 'multiple'): ?>
+        <div>Answer: <?=$myanswer?> </div>
+        
+        <hr>
+    <b>Teacher's Mark:</b>
 
-        <!-- if test question not submited  -->
-        <?php  if(!$submitted): ?>
-         <input  value="<?=$myanswer?>" class="form-control" type="text" name="<?=$question->id?>" placeholder="type your answer here">
-        <?php else:?>
-          <div>Answer: <?=$myanswer?> </div>
+    <div style="font-size: 25px;">
+          <?=($mymark == 1) ? '<i class="fa fa-check float-right"></i>':'<i class="fa fa-times float-right"></i>'?>
+      
+    </div>
+        
       <?php endif;?>
-
-    <?php endif;?>
 
       </div>
     </div>
 <?php endforeach;?>
 
 <!-- if test is not submited show the save button but if is submitted then remove the save answer button -->
-<?php  if(!$submitted): ?>
-<center>
-  <small>Save your answers before moving to another page</small> <br>
-  <button class="btn btn-primary">Save Answers</button>
-</center>
-</form>
-<?php endif;?>
+
 
 <?php endif;?>
 <?php $pager->display() ?>
 
-<script>
-  var percent = <?=$percentage?>;
-  function submit_test(e)
-  {
-    if(!confirm("are you sure you want to submit this test!?")){
-      e.preventDefault();
-      return;
-    }
-
-    if(percent < 100){
-      if(!confirm("you have only answered "+ percent +"% of the test. are yo sure you still want to submit!?")){
-      e.preventDefault();
-      return;
-      }
-    }
-  }
-</script>

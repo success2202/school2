@@ -46,14 +46,28 @@ class Classes extends controller
 
           $arr['stdnt_classes'] = $class->query($query,$arr);
          
-          //getting the class 
+          //getting the class ids from classes that dont already have members
+          $classes_i_own = $class->where('user_id',Auth::getUser_id());
+         
+          if($classes_i_own && $arr['stdnt_classes'])
+          {
+            $arr['stdnt_classes'] = array_merge($arr['stdnt_classes'],$classes_i_own);
+          }
+           
           $data = array();
           if($arr['stdnt_classes']){
-              foreach ($arr['stdnt_classes'] as $key => $arow) {
-                $data[] = $class->first('class_id', $arow->class_id);
+//getting all class ids and make them one unique class id from the colums
+            $all_classes = array_column($arr['stdnt_classes'], 'class_id');
+            $all_classes = array_unique($all_classes);
+
+              foreach ($all_classes as $class_id) {
+                $data[] = $class->first('class_id',$class_id);
+               
               }
+              
           }
-         }
+          
+         } 
         $crumbs[] = ['Dashboard', ''];
         $crumbs[] = ['classes', 'classes'];
           $this->view('classes',[

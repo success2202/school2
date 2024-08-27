@@ -79,8 +79,10 @@ public function make_school_id($data){
 public function get_class($data){
     $class = new Classes_model();
     foreach($data as $key => $row){
-      $result = $class->where('class_id', $row->class_id);
-        $data[$key]->class = is_array($result) ? $result[0] : false;
+        if(!empty($row->class_id)){ 
+            $result = $class->where('class_id', $row->class_id);
+            $data[$key]->class = is_array($result) ? $result[0] : false;
+        }
     }
     
     return $data;
@@ -92,8 +94,8 @@ public function get_answered_test($test_id, $user_id){
 
         $db = new Database();
         $arr = ['test_id'=>$test_id, 'user_id'=>$user_id];
-        $res = $db->query("select * from answered_test where test_id = :test_id && user_id = :user_id limit 1",  $arr);
-
+        $res = $db->query("select * from answered_test where test_id = :test_id && user_id = :user_id limit 1", $arr);
+        
         if(is_array($res))
         {
             return $res[0];
@@ -102,15 +104,29 @@ public function get_answered_test($test_id, $user_id){
     }
 
 
+    public function get_to_mark_count()
+    {
+       
+        $test = new Tests_model();
+        if(Auth::access('admin')){ 
+           
+             $query = "select * from answered_test where test_id IN (select test_id from tests where school_id = :school_id) && submitted = 1 && marked = 0";
+             $arr['school_id'] = $school_id;
+             $to_mark = $test->query($query,$arr);
+   
+         }else{
+            //$test = new Tests_model();
 
-//    private function random_string($length){
-//     $array = array(0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-//     $text = "";
-//     for($x = 0; $x < $length; $x++){
-//         $random = rand(0,61);
-//         $text .= $array[$random];
-//     }
-//     return $text;
-//    }
+        $mytable = "class_lecturers";
+        $arr['user_id'] = Auth::getUser_id();  
+
+        $query = "select * from answered_test where test_id IN (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0";
+        $to_mark = $test->query($query,$arr);
+                 
+    }
+
+        return count($to_mark);
+    }
+
 
 }
