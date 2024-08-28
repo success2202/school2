@@ -58,8 +58,19 @@ class Profile extends controller
                 $mytable = "class_lecturers";
                 $disabled = "";
               }
-
-         
+              //nested query ......getting disabled and class ids in another query
+              $tests = new Tests_model();
+              $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0)  order by id desc";
+              $data['test_rows'] = $tests->query($query,['user_id'=>$id]);
+              $arr['user_id'] = $id;
+              if(isset($_GET['find']))
+              {
+                  $find = '%' . $_GET['find'] . '%';
+                  $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && test like :find order by id desc";
+                  $arr['find'] = $find; 
+              }
+                  $data['test_rows'] = $tests->query($query,$arr);
+         /*
           $query = "select * from $mytable where user_id = :user_id && disabled = 0";
           $data['stdnt_classes'] = $class->query($query,['user_id'=>$id]);
          
@@ -79,8 +90,11 @@ class Profile extends controller
           $query = "select * from tests where $disabled class_id in ($id_str)";
           $tests_model = new Tests_model();
           $tests = $tests_model->query($query);
+          
           $data['test_rows'] = $tests;
 
+          */
+          
           }else{  
 
           //get all submitted tests

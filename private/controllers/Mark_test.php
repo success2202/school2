@@ -93,20 +93,48 @@ class Mark_test extends controller
         if(isset($_GET['unsubmit'])){
         
             $query = "update answered_test set submitted = 0, submitted_date = :sub_date where test_id = :test_id && user_id = :user_id limit 1";
-            $tests->query($query,['test_id'=>$id,
+            $tests->query($query,[
+                'test_id'=>$id,
              'user_id'=>$user_id,
             'sub_date'=>''
             ]);
         }
-//if its auto mark
-        if(isset($_GET['unsubmit'])){
+//if its an auto mark
+        if(isset($_GET['auto_mark'])){
         
-            $query = "update answered_test set submitted = 0, submitted_date = :sub_date where test_id = :test_id && user_id = :user_id limit 1";
-            $tests->query($query,['test_id'=>$id,
-             'user_id'=>$user_id,
-            'sub_date'=>''
+            $query = "select id,correct_answer from test_questions where test_id = :test_id && (question_type = 'multiple' || question_type = 'objective') ";
+            $original_question = $quest->query($query,[
+                'test_id'=>$id,
+             
             ]);
+            if($original_question){
+                foreach($original_question as $question_row){
+                    $query = "select id,answer from answers where user_id = :user_id && test_id = :test_id && question_id = :question_id limit 1";
+                    $answer_row = $tests->query($query, [
+                        'user_id'=>$user_id,
+                        'test_id'=>$id,
+                        'question_id'=>$question_row->id,
+                    ]);
+
+                    if($answer_row){
+                    
+                    $answer_row = $answer_row[0];
+                    $correct = strtolower(trim($question_row->correct_answer));
+                    $student_answer = strtolower(trim($answer_row->answer));
+                
+                if($correct == $student_answer){
+                    //this answer is correct
+                    $answers->update($answer_row->id, ['answer_mark'=>1]);
+                }else{
+                    // this answer is wrong
+                    $answers->update($answer_row->id, ['answer_mark'=>2]);
+                }
+             }
+          }
         }
+        //redirect to same page 
+        $this->redirect('mark_test/'.$id.'/'.$user_id.$page_number);
+    }
 
         // if is set as marked
         if(isset($_GET['set_marked']) && (get_mark_percentage($id, $user_id) >= 100)){

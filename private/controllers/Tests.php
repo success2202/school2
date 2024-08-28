@@ -34,34 +34,19 @@ class Tests extends controller
             $mytable = "class_lecturers";
             $disabled = "";
           }
-
-          $query = "select * from $mytable where user_id = :user_id && disabled = 0 ";
-          
+          $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) order by id desc";
           $arr['user_id'] = Auth::getUser_id();
-          $arr['stdnt_classes'] = $tests->query($query,$arr);
          
-          //getting the test 
-          $data = array();
-          $arr2 = array();
-          if($arr['stdnt_classes']){
-              foreach ($arr['stdnt_classes'] as $key => $arow) {
-                $a = $tests->where('class_id', $arow->class_id);
-                $query = "select * from tests where $disabled class_id = :class_id";
-                $arr2['class_id'] = $arow->class_id;
-                if(isset($_GET['find']))
-                {
-                 $find = '%' . $_GET['find'] . '%';
-                 $query = "select * from tests where $disabled class_id = :class_id && test like :find";
-                 //$query = "select tests.test, {$mytable}.* from $mytable join tests on tests.test_id ={$mytable}.test_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && tests.test like :find";
-                 $arr2['find'] = $find; 
-                }
+            if(isset($_GET['find']))
+            {
+                $find = '%' . $_GET['find'] . '%';
+                $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && test like :find order by id desc";
+                //$query = "select tests.test, {$mytable}.* from $mytable join tests on tests.test_id ={$mytable}.test_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && tests.test like :find";
+                $arr['find'] = $find; 
+            }
+            
+            $data = $tests->query($query,$arr);
 
-                $a = $tests->query($query,$arr2);
-                if(is_array($a)){
-                    $data = array_merge($data, $a); //getting the test result and adding it to an array data
-                }
-              }
-          }
          }
         $crumbs[] = ['Dashboard', ''];
         $crumbs[] = ['tests', 'tests'];

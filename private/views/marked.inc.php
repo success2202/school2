@@ -66,11 +66,9 @@
           </td>  
 
         <td>
-            <?php if(can_take_test($test_row->test_id)):?>
-            <a href="<?=ROOT?>/take_test/<?=$test_row->test_id?>">
-                <button class="btn btn-sm btn-primary">Take this test</button>
-            </a>
-            <?php endif;?>
+                <a href="<?=ROOT?>/marked_singleTest/<?=$test_row->test_id?>/<?=$test_row->user->user_id?>">
+                 <button class="btn btn-sm btn-primary"><i class="fa fa-chevron-right"></i>View</button>
+                 </a>
         </td>
             </tr>
         <?php endforeach; ?>
