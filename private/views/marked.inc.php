@@ -21,17 +21,10 @@
 
             <tr>
                 
-            <?php if(Auth::access('lecturer')):?>  
-            <td>
-            
-                <a href="<?=ROOT?>/marked_singleTest/<?=$test_row->test_id?>/<?=$test_row->user->user_id?>">
-                 <button class="btn btn-sm btn-primary"><i class="fa fa-chevron-right"></i>View</button>
-                 </a>
-            
-            </td>
-            <?php else:?>
+           
+          
             <td></td>
-            <?php endif;?>
+           
             <?php  $active = $test_row->test_details->disabled ? "No":"Yes"; ?>
             <td><?=$test_row->test_details->test?></td> 
             <td><?=$test_row->user->firstname?>  <?=$test_row->user->lastname?> </td> 

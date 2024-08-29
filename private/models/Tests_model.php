@@ -112,23 +112,25 @@ public function get_answered_test($test_id, $user_id){
        
         $test = new Tests_model();
         if(Auth::access('admin')){ 
+           //nested querry
            
-             $query = "select * from answered_test where test_id IN (select test_id from tests where school_id = :school_id) && submitted = 1 && marked = 0";
-             $arr['school_id'] = $school_id;
+             $query = "select * from answered_test where test_id in (select test_id from tests where school_id = :school_id) && submitted = 1 && marked = 0";
+             $arr['school_id'] = Auth::getSchool_id();
              $to_mark = $test->query($query,$arr);
-   
+            
          }else{
-            //$test = new Tests_model();
+            
 
-        $mytable = "class_lecturers";
+        //$mytable = "class_lecturers";
         $arr['user_id'] = Auth::getUser_id();  
 
-        $query = "select * from answered_test where test_id IN (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0";
+        $query = "select * from answered_test where test_id in (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0";
         $to_mark = $test->query($query,$arr);
-                 
+        
     }
-
-        return count($to_mark);
+        
+   
+        return count($to_mark); 
     }
 
 

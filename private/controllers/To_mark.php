@@ -10,7 +10,7 @@ class To_mark extends controller
             $this->redirect('access-denied');
         }
 
-        $test = new Tests_model();
+        $tests_model = new Tests_model();
         $school_id = Auth::getSchool_id();
 
         if(Auth::access('admin')){ 
@@ -25,7 +25,7 @@ class To_mark extends controller
             $query = "select * from tests where school_id = :school_id && (test like :find ) order by id desc";
             $arr['find'] = $find; 
         }
-            $to_mark = $test->query($query,$arr);
+            $to_mark = $tests_model->query($query,$arr);
              
          }else{
             //$test = new Tests_model();
@@ -34,7 +34,7 @@ class To_mark extends controller
         $arr['user_id'] = Auth::getUser_id();  
 
         $query = "select * from answered_test where test_id IN (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0 order by id desc";
-        $to_mark = $test->query($query,$arr);
+        $to_mark = $tests_model->query($query,$arr);
           
           
         /*
@@ -50,8 +50,8 @@ class To_mark extends controller
 
    if($to_mark){
     // get test row data
-    foreach($to_mark as $key =>$value){
-        $a = $test->first('test_id', $value->test_id);
+    foreach($to_mark as $key => $value){
+        $a = $tests_model->first('test_id', $value->test_id);
         if($a){
             $to_mark[$key]->test_details = $a;
         }

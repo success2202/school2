@@ -289,3 +289,30 @@ function get_score_percentage($test_id, $user_id)
 
     return 0;
 }
+
+
+function get_to_mark_count()
+{
+   
+    $tests = new Tests_model();
+    if(Auth::access('admin')){ 
+       //nested querry
+       $arr['school_id'] = Auth::getSchool_id();
+         $query = "select * from answered_test where test_id IN (select test_id from tests where school_id = :school_id) && submitted = 1 && marked = 0";
+         
+         $to_mark = $tests->query($query,$arr);
+        
+     }else{
+        
+
+    //$mytable = "class_lecturers";
+    $arr['user_id'] = Auth::getUser_id();  
+
+    $query = "select * from answered_test where test_id in (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0";
+    $to_mark = $tests->query($query,$arr);
+    
+}
+    
+
+    return count($to_mark); 
+}
