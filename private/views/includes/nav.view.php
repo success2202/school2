@@ -54,8 +54,16 @@
         <li class="nav-item">
           <a class="nav-link <?=$this->controller_name() == 'Classes' ? 'active-nav' :''?>" href="<?=ROOT?>/classes">CLASSES</a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link <?=$this->controller_name() == 'Tests' ? 'active-nav' :''?>" href="<?=ROOT?>/tests">TEST</a>
+        <a class="nav-link  <?=$this->controller_name() == 'Tests' ? 'active-nav' :''?>" style="position: relative" href="<?=ROOT?>/tests">TEST
+          <?php
+          $unsubmitted_test_count = get_unsubmitted_tests()
+          ?>
+          <?php if($unsubmitted_test_count): ?>
+            <span class="badge bg-danger text-white" style="position: absolute; top: -5px; right:0px"><?=$unsubmitted_test_count?></span>
+          <?php endif;?>
+          </a>
         </li>
 
         <?php if(Auth::access('lecturer')):?>
@@ -79,14 +87,14 @@
         <?php endif;?>
 
         <!-- <li class="nav-item">
-          <a class="nav-link" href="<?=ROOT?>/signup">SIGNUP</a>
+          <a class="nav-link" href="/signup">SIGNUP</a>
         </li> -->
         
         </ul>
         <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
-            <?= Auth::getfirstname()?>
+           <i class="fa fa-user"></i> <?= Auth::getfirstname()?>
           </a>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="<?=ROOT?>/profile">Profile</a></li>
@@ -96,6 +104,29 @@
           </ul>
         </li>
       </ul>
+
+     <?php if(Auth::access('lecturer')):?>
+      <form class="container-inline">
+          <div class="input-group">
+
+      <?php $years = get_years()?>
+        <select name="school_year" class="form-control" style="max-width:100px">
+           <option><?=get_var('school_year',!empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time()),"get")?></option>
+        <?php foreach ($years as $year): ?>
+              <option><?=$year?></option>
+            <?php endforeach;?>
+        </select>
+          <?=add_get_vars()?>
+        <div class="input-group-prepend">
+          <button class="input-group-text" id="basic-addon1"><i class="fa fa-chevron-right"></i>&nbsp</button>
+        </div>
+
+          
+      
+        </div>
+      </form>
+     <?php endif;?>
+
     </div>
   </div>
 </nav>

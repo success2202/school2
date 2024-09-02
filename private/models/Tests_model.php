@@ -114,8 +114,9 @@ public function get_answered_test($test_id, $user_id){
         if(Auth::access('admin')){ 
            //nested querry
            
-             $query = "select * from answered_test where test_id in (select test_id from tests where school_id = :school_id) && submitted = 1 && marked = 0";
+             $query = "select * from answered_test where test_id in (select test_id from tests where school_id = :school_id) && submitted = 1 && marked = 0 && year(date) = :school_year";
              $arr['school_id'] = Auth::getSchool_id();
+             $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
              $to_mark = $test->query($query,$arr);
             
          }else{
@@ -123,14 +124,18 @@ public function get_answered_test($test_id, $user_id){
 
         //$mytable = "class_lecturers";
         $arr['user_id'] = Auth::getUser_id();  
-
-        $query = "select * from answered_test where test_id in (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0";
+        $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
+        $query = "select * from answered_test where test_id in (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0 && year(date) = :school_year";
         $to_mark = $test->query($query,$arr);
         
     }
         
-   
-        return count($to_mark); 
+        if($to_mark){
+            return count($to_mark); 
+        }else{
+            return 0; 
+        }
+        
     }
 
 

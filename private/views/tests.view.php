@@ -18,6 +18,7 @@
 
     </nav>
     <!-- including a class table view on the class -->
+   
             <?php include(views_path('tests')); ?> 
     </div>
     

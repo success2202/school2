@@ -1,10 +1,16 @@
 <?php
 
-function get_var($key, $default = ""){
-    if(isset($_POST[$key]))
-    {
-        return $_POST[$key]; 
+function get_var($key, $default = "", $method = "post"){
+    $data = $_POST;
+    if($method == "get"){
+        $data = $_GET;
     }
+
+    if(isset($data[$key]))
+    {
+        return $data[$key]; 
+    }
+
     return $default;
 }
 
@@ -316,3 +322,103 @@ function get_to_mark_count()
 
     return count($to_mark); 
 }
+
+//return unsubmitted test on the test nav
+function get_unsubmitted_tests(){
+    if(Auth::getRank() == "student"){
+
+        $tests_class = new Tests_model();
+        $query = "select id from tests where class_id in (select class_id from class_students where user_id = :user_id) and test_id not in (SELECT test_id FROM answered_test where user_id = :user_id && submitted = 1) && disabled = 0";
+        $data = $tests_class->query($query,['user_id'=>Auth::getUser_id()]);
+
+        if($data){
+            return count($data);
+        }
+            
+    }
+
+    return 0; 
+}
+
+//return unsubmitted test on the test row
+function get_unsubmitted_tests_row(){
+    if(Auth::getRank() == "student"){
+
+        $tests_class = new Tests_model();
+        $query = "select test_id from tests where class_id in (select class_id from class_students where user_id = :user_id) and test_id not in (SELECT test_id FROM answered_test where user_id = :user_id && submitted = 1)";
+        $data = $tests_class->query($query,['user_id'=>Auth::getUser_id()]);
+
+        if($data){
+            return array_column($data, 'test_id');
+        }
+            
+    }
+
+    return [];
+    
+}
+
+function get_years(){
+    $arr = array();
+    $db = new Database();
+    $query = "select date from classes order by id asc limit 1";
+    $row = $db->query($query);
+
+    if($row){
+        $year = date("Y",strtotime($row[0]->date));
+        $arr[] = $year;
+        $current_year = date("Y",time());
+
+        while($year < $current_year){
+            $year += 1;
+            $arr[] = $year;
+        }
+    }else{
+        $arr[] = date("Y",time());
+    }
+    rsort($arr);
+    return $arr;
+}
+
+
+switch_year();
+function switch_year(){
+    if(!isset($_SESSION['USER']))
+    {
+        $_SESSION['USER'] = (object)[];
+        $_SESSION['USER']->year = date("Y",time());
+    }
+
+    if(!empty($_GET['school_year'])){
+        $year = (int)$_GET['school_year'];
+        $_SESSION['USER']->year = $year;
+        
+    }
+}
+
+function add_get_vars(){
+    $text = '';
+    if(!empty($_GET))
+    {
+        foreach($_GET as $key => $value){
+            if($key != "url"){
+                $text .= "<input type='hidden' name='$key' value='$value' />";
+            }
+        }
+    }
+    return $text;
+}
+
+// switch_year();
+// function switch_year(){
+//     if(!isset($_SESSION['USER']))
+//     {
+//         $_SESSION['USER'] = (object)[];
+//     }
+
+//     if(!empty($_GET['school_year'])){
+//         $year = (int)$_GET['school_year'];
+//         $_SESSION['USER']->year = $year;
+        
+//     } 
+// }

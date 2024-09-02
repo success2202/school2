@@ -33,9 +33,11 @@ class Profile extends controller
           }
 
          
-          $query = "select * from $mytable where user_id = :user_id && disabled = 0";
-          $data['stdnt_classes'] = $class->query($query,['user_id'=>$id]);
-         
+          $query = "select * from $mytable where user_id = :user_id && disabled = 0 && year(date) = :school_year";
+          $arr['user_id'] = $id;
+          $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
+         $data['stdnt_classes'] = $class->query($query,$arr);
+
           //getting the class the student belong to
           $data['student_classes'] = array();
           if($data['stdnt_classes']){
@@ -60,71 +62,49 @@ class Profile extends controller
               }
               //nested query ......getting disabled and class ids in another query
               $tests = new Tests_model();
-              $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0)  order by id desc";
-              $data['test_rows'] = $tests->query($query,['user_id'=>$id]);
-              $arr['user_id'] = $id;
-              if(isset($_GET['find']))
-              {
-                  $find = '%' . $_GET['find'] . '%';
-                  $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && test like :find order by id desc";
-                  $arr['find'] = $find; 
-              }
-                  $data['test_rows'] = $tests->query($query,$arr);
-         /*
-          $query = "select * from $mytable where user_id = :user_id && disabled = 0";
-          $data['stdnt_classes'] = $class->query($query,['user_id'=>$id]);
-         
-          //getting the class the student belong to
-          $data['student_classes'] = array();
-          if($data['stdnt_classes']){
-              foreach ($data['stdnt_classes'] as $key => $arow) {
-                $data['student_classes'][] = $class->first('class_id', $arow->class_id);
-              }
-          }
-          $class_ids =[];
-          foreach($data['student_classes'] as $key => $class_row){
-            $class_ids[] = $class_row->class_id;
-          }
-          //converting an array into a string
-          $id_str = "'" . implode("','", $class_ids) . "'";
-          $query = "select * from tests where $disabled class_id in ($id_str)";
-          $tests_model = new Tests_model();
-          $tests = $tests_model->query($query);
+                $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && year(date) = :school_year order by id desc";
+                $arr['user_id'] = Auth::getUser_id();
+                $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
+               
+                  if(isset($_GET['find']))
+                  {
+                      $find = '%' . $_GET['find'] . '%';
+                      $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && test like :find && year(date) = :school_year order by id desc";
+                      //$query = "select tests.test, {$mytable}.* from $mytable join tests on tests.test_id ={$mytable}.test_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && tests.test like :find";
+                      $arr['find'] = $find; 
+                  }
+                   $data['test_rows'] = $tests->query($query,$arr);
           
-          $data['test_rows'] = $tests;
+              }else{  
 
-          */
-          
-          }else{  
-
-          //get all submitted tests
-            $marked = array();
-            $tests = new Tests_model();
-                $query = "select * from answered_test where user_id = :user_id && submitted = 1 && marked = 1";
-                $answered_tests = $tests->query($query,['user_id'=>$id]);
-                
-                if(is_array($answered_tests)){
-                  
-                  foreach($answered_tests as $key => $value){ 
-                    $test_details = $tests->first('test_id', $answered_tests[$key]->test_id);
-                    $answered_tests[$key]->test_details = $test_details;
-                    //getting the test result and adding/merging it to an array data
-                }
-          }
-          $data['test_rows'] = $answered_tests;  
-        }  
-    }
-    
-        $data['row'] =$row;
-        $data['crumbs'] =$crumbs;
-
-        if(Auth::access('reception') || Auth::i_own_content($row)){
-          $this->view('profile',$data);
-        }else{
-          $this->view('access-denied');
+              //get all submitted tests
+                $marked = array();
+                $tests = new Tests_model();
+                    $query = "select * from answered_test where user_id = :user_id && submitted = 1 && marked = 1";
+                    $answered_tests = $tests->query($query,['user_id'=>$id]);
+                    
+                    if(is_array($answered_tests)){
+                      
+                      foreach($answered_tests as $key => $value){ 
+                        $test_details = $tests->first('test_id', $answered_tests[$key]->test_id);
+                        $answered_tests[$key]->test_details = $test_details;
+                        //getting the test result and adding/merging it to an array data
+                    }
+              }
+              $data['test_rows'] = $answered_tests;  
+            }  
         }
-          
-    }
+        
+            $data['row'] =$row;
+            $data['crumbs'] =$crumbs;
+            $data['unsubmitted'] = get_unsubmitted_tests_row();
+            if(Auth::access('reception') || Auth::i_own_content($row)){
+              $this->view('profile',$data);
+            }else{
+              $this->view('access-denied');
+            }
+              
+        }
 
 
     function edit($id = '')

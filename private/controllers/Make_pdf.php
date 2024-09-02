@@ -30,10 +30,29 @@ class Make_pdf extends controller
             ],
        
     ]);
-        $html = file_get_contents(ROOT.'/make_text_pdf/yRN7Go4Jl4NB4DFSv0CFcRROfvCy8WEGKvoYyDI60IdP5S5QgoumLj3Sh0UY/ada%20.uja');
+        $html = file_get_contents(ROOT.'/make_text_pdf/'.$id.'/'.$user_id);
         $mpdf->WriteHTML($html);
-        $mpdf->Output($folder.$user_id.'_test_results_'.date("Y-m-d_H_i_s",time()).'.pdf');
-        
+        //get user details
+        $user_class = new User();
+        $user_row = $user_class->first('user_id',$user_id);
+    
+        $file_name = $folder.$user_row->firstname.'_'.$user_row->lastname.'_test_results_'.date("Y-m-d_H_i_s",time()).'.pdf';
+        $mpdf->Output($file_name);
+
+        if(file_exists($file_name)){ 
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file_name).'"');
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file_name)); //Absolute URL
+            ob_clean();
+            flush();
+            readfile($file_name); //Absolute URL
+            exit();
+        }
     }
     
 }

@@ -32,10 +32,14 @@
                 </a>
                 </td>
 
-                <th>Date Created:</th><td><?=get_date($row->date)?></td>
+                <th>Date Created:</th> <td><?=get_date($row->date)?></td>
+
                 <td>
-                
+                <a href="<?=ROOT?>/make_pdf/<?=$row->test_id?>/<?=$student_row->user_id?>?type=text">
+                    <button class="btn btn-primary float-right">Save as PDF</button>
+                </a>
                 </td>
+
             </tr>
            
            <?php $active = $row->disabled ? "No": "Yes";?>
@@ -46,9 +50,10 @@
         
           
         </table>
-       
+        
+       <br>
     </div>
-    
+    <br>
     <?php
         switch ($page_tab) {
             case 'view':

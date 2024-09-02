@@ -14,13 +14,14 @@ class Classes extends controller
 
         if(Auth::access('admin')){ 
             //$data = $classes->findAll();
-             $query = "select * from classes where school_id = :school_id order by id desc";
+             $query = "select * from classes where school_id = :school_id && year(date) = :school_year order by id desc";
              $arr['school_id'] = $school_id;
+             $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
 
              if(isset($_GET['find']))
         {
             $find = '%' . $_GET['find'] . '%';
-            $query = "select * from classes where school_id = :school_id && (class like :find ) order by id desc";
+            $query = "select * from classes where school_id = :school_id && (class like :find ) && year(date) = :school_year order by id desc";
             $arr['find'] = $find; 
         }
             $data = $classes->query($query,$arr);
@@ -33,17 +34,20 @@ class Classes extends controller
             $mytable = "class_lecturers";
           }
 
-          $query = "select * from $mytable where user_id = :user_id && disabled = 0";
-          
+          $query = "select * from classes where (class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && year(date) = :school_year) || user_id = :user_id";
           $arr['user_id'] = Auth::getUser_id();
+          $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
+         
 
     if(isset($_GET['find']))
         {
          $find = '%' . $_GET['find'] . '%';
-         $query = "select classes.class, {$mytable}.* from $mytable join classes on classes.class_id ={$mytable}.class_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && classes.class like :find";
+         $query = "select classes.class, {$mytable}.* from $mytable join classes on classes.class_id ={$mytable}.class_id where ({$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && classes.class like :find && year(classes.date) = :school_year)";
          $arr['find'] = $find; 
         }
+        $data = $class->query($query,$arr);
 
+/*
           $arr['stdnt_classes'] = $class->query($query,$arr);
          
           //getting the class ids from classes that dont already have members
@@ -66,6 +70,7 @@ class Classes extends controller
               }
               
           }
+          */
           
          } 
         $crumbs[] = ['Dashboard', ''];
@@ -116,6 +121,7 @@ class Classes extends controller
         }
 
         $classes = new classes_model();
+         $row = $classes->where('id', $id);
         $errors = array(); //edit class if you add the class and if you are authorised to 
         if(count($_POST) > 0 && Auth::access('lecturer') && Auth::i_own_content($row))
         {
@@ -132,7 +138,7 @@ class Classes extends controller
         }
 
         }
-        $row = $classes->where('id', $id);
+       
        
 
              $crumbs[] = ['Dashboard', ''];
@@ -160,7 +166,7 @@ class Classes extends controller
         }
 
             $classes = new classes_model();
-
+            $row = $classes->where('id',$id);
             $errors = array();
         //delete class if you add the class and if you are authorised to 
          if(count($_POST) > 0 && Auth::access('lecturer') && Auth::i_own_content($row))
@@ -169,8 +175,6 @@ class Classes extends controller
                 $this->redirect('classes');
 
             }
-
-            $row = $classes->where('id',$id);
 
                 $crumbs[] = ['Dashboard', ''];
                 $crumbs[] = ['classes', 'classes'];

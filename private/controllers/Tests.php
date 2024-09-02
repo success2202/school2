@@ -13,9 +13,10 @@ class Tests extends controller
         $school_id = Auth::getSchool_id();
 
         if(Auth::access('admin')){ 
-            //$data = $tests->findAll();
-             $query = "select * from tests where school_id = :school_id order by id desc";
+      
+             $query = "select * from tests where school_id = :school_id && year(date) = :school_year order by id desc";
              $arr['school_id'] = $school_id;
+             $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
 
              if(isset($_GET['find']))
         {
@@ -34,13 +35,14 @@ class Tests extends controller
             $mytable = "class_lecturers";
             $disabled = "";
           }
-          $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) order by id desc";
+          $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && year(date) = :school_year order by id desc";
           $arr['user_id'] = Auth::getUser_id();
+          $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
          
             if(isset($_GET['find']))
             {
                 $find = '%' . $_GET['find'] . '%';
-                $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && test like :find order by id desc";
+                $query = "select * from tests where $disabled class_id in (select class_id from $mytable where user_id = :user_id && disabled = 0) && test like :find && year(date) = :school_year order by id desc";
                 //$query = "select tests.test, {$mytable}.* from $mytable join tests on tests.test_id ={$mytable}.test_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && tests.test like :find";
                 $arr['find'] = $find; 
             }
@@ -52,7 +54,8 @@ class Tests extends controller
         $crumbs[] = ['tests', 'tests'];
           $this->view('tests',[
             'crumbs'=>$crumbs,
-            'test_rows'=>$data
+            'test_rows'=>$data,
+            'unsubmitted'=>get_unsubmitted_tests_row(),
         ]);
     }
     

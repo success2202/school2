@@ -21,7 +21,7 @@ class School extends Model
    public function validate($DATA){
     $this->errors = array();
     //check for school
-    if(empty($DATA['school']) || !preg_match('/^[a-zA-Z]+$/', $DATA['school']))
+    if(empty($DATA['school']) || !preg_match('/^[a-z A-Z]+$/', $DATA['school']))
     {
        $this->errors['school'] = "only letters must be allowed in school";
        return false;

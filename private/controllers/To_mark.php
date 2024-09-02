@@ -16,13 +16,14 @@ class To_mark extends controller
         if(Auth::access('admin')){ 
             //$data = $tests->findAll();
              //$query = "select * from tests where school_id = :school_id order by id desc";
-             $query = "select * from answered_test where test_id IN (select test_id from tests where school_id = :school_id) && submitted = 1 && marked = 0 order by id desc";
+             $query = "select * from answered_test where test_id IN (select test_id from tests where school_id = :school_id) && submitted = 1 && marked = 0 && year(date) = :school_year order by id desc";
              $arr['school_id'] = $school_id;
+             $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
 
     if(isset($_GET['find']))
         {
             $find = '%' . $_GET['find'] . '%';
-            $query = "select * from tests where school_id = :school_id && (test like :find ) order by id desc";
+            $query = "select * from tests where school_id = :school_id && (test like :find ) && year(date) = :school_year order by id desc";
             $arr['find'] = $find; 
         }
             $to_mark = $tests_model->query($query,$arr);
@@ -32,20 +33,20 @@ class To_mark extends controller
 
         $mytable = "class_lecturers";
         $arr['user_id'] = Auth::getUser_id();  
+        $arr['school_year'] = !empty($_SESSION['USER']->year) ? $_SESSION['USER']->year : date("Y",time());
 
-        $query = "select * from answered_test where test_id IN (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0 order by id desc";
-        $to_mark = $tests_model->query($query,$arr);
-          
-          
-        /*
+        $query = "select * from answered_test where test_id IN (select test_id from tests where class_id IN (SELECT class_id FROM `class_lecturers` WHERE user_id = :user_id)) && submitted = 1 && marked = 0 && year(date) = :school_year order by id desc";
+        
+       
+
             if(isset($_GET['find']))
                 {
                 $find = '%' . $_GET['find'] . '%';
-                $query = "select tests.test, {$mytable}.* from $mytable join tests on tests.test_id ={$mytable}.test_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && tests.test like :find";
+                $query = "select tests.test, {$mytable}.* from $mytable join tests on tests.test_id ={$mytable}.test_id where {$mytable}.user_id = :user_id && {$mytable}.disabled = 0 && tests.test like :find && year(tests.date) = :school_year";
                 $arr['find'] = $find; 
                 }
-        */
-                   
+       $to_mark = $tests_model->query($query,$arr);
+                
     }
 
    if($to_mark){
